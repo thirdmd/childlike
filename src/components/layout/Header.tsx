@@ -13,13 +13,9 @@ export const Header = () => {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img 
-              src={childlikeLogo} 
-              alt="Childlike" 
-              className="h-8 w-auto"
-            />
+            <img src={childlikeLogo} alt="Childlike" className="h-12 w-auto" />
           </Link>
-          
+
           {/* Desktop Navigation - Pill style buttons */}
           <nav className="hidden lg:flex items-center gap-3">
             {siteConfig.primaryNav.map((item) => (
@@ -53,9 +49,15 @@ export const Header = () => {
             aria-label="Toggle menu"
           >
             <div className="w-6 h-5 flex flex-col justify-between">
-              <span className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-              <span className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
-              <span className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+              <span
+                className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+              />
+              <span
+                className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""}`}
+              />
+              <span
+                className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+              />
             </div>
           </button>
         </div>
@@ -73,7 +75,7 @@ export const Header = () => {
                 {item.label}
               </Link>
             ))}
-            
+
             {/* Mobile user actions */}
             <div className="flex gap-2 pt-4">
               <button className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 flex items-center justify-center gap-2">

@@ -7,41 +7,26 @@ import { homeConfig } from "@/config/home";
 const Home = () => {
   return (
     <Page>
-      {/* Hero Section */}
-      <Section className="pt-24 pb-16">
+      {/* Hero Section - Full Viewport, Product-Focused */}
+      <Section className="min-h-screen bg-brand-blue flex items-center justify-center py-0">
         <Container size="xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-display mb-6">
-                {homeConfig.hero.title}
-              </h1>
-              <p className="text-h3 text-foreground/70 mb-8 font-normal">
-                {homeConfig.hero.subtitle}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <BrandButton variant="primary" href={homeConfig.hero.primaryCtaHref}>
-                  {homeConfig.hero.primaryCtaLabel}
-                </BrandButton>
-                <BrandButton variant="outline" href={homeConfig.hero.secondaryCtaHref}>
-                  {homeConfig.hero.secondaryCtaLabel}
-                </BrandButton>
-              </div>
-            </div>
-            <div className="bg-brand-black/5 rounded-lg aspect-square flex items-center justify-center">
-              <p className="text-foreground/40 text-small">Hero Product Visual</p>
+          <div className="flex items-center justify-center min-h-screen">
+            {/* Large Product Image Placeholder */}
+            <div className="w-full max-w-xl aspect-square bg-brand-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+              <p className="text-brand-white/40 text-small">3D Product Visual</p>
             </div>
           </div>
         </Container>
       </Section>
 
       {/* Pillars Section */}
-      <Section className="bg-brand-blue text-brand-white">
+      <Section className="bg-background">
         <Container size="xl">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {homeConfig.pillars.map((pillar) => (
               <div key={pillar.id}>
                 <h3 className="text-h3 mb-2">{pillar.title}</h3>
-                <p className="text-body opacity-90">{pillar.description}</p>
+                <p className="text-body text-foreground/70">{pillar.description}</p>
               </div>
             ))}
           </div>
@@ -49,7 +34,7 @@ const Home = () => {
       </Section>
 
       {/* Experience Section */}
-      <Section>
+      <Section className="bg-brand-black/5">
         <Container size="md" className="text-center">
           <h2 className="text-h1 mb-6">
             {homeConfig.experienceSection.heading}

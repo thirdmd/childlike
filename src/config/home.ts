@@ -1,7 +1,7 @@
 export const homeConfig = {
   hero: {
     title: "Pioneering Product Company",
-    subtitle: "Fusing innovation, nutrition, industrial design, and play",
+    subtitle: "Fusing innovation, nutrition, design, and play",
     primaryCtaLabel: "Explore Products",
     primaryCtaHref: "/products",
     secondaryCtaLabel: "Join Waitlist",
@@ -30,7 +30,8 @@ export const homeConfig = {
     },
   ],
   experienceSection: {
-    heading: "More Than Nutrition",
-    description: "Childlike creates experiences, not just snacks. Every product is designed with ritual in mind — flip, dunk, pour, crunch. Industrial design meets sensory pleasure.",
+    heading: "Stay Wild Inside",
+    description:
+      "Childlike creates experiences, not just snacks. Every product is designed with ritual in mind — flip, dunk, pour, crunch. Industrial design meets sensory pleasure.",
   },
 } as const;

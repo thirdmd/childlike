@@ -13,7 +13,7 @@ export const Header = () => {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img src={childlikeLogo} alt="Childlike" className="h-15 w-auto" />
+            <img src={childlikeLogo} alt="Childlike" className="h-13 w-auto" />
           </Link>
 
           {/* Desktop Navigation - Pill style buttons */}

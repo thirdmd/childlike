@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Childlike Brand Colors */
-    --brand-blue: 245 88% 46%;
+    --brand-blue: 216 100% 34%;
     --brand-white: 0 0% 100%;
     --brand-black: 0 0% 0%;
     
@@ -22,7 +22,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 245 88% 46%;
+    --primary: 216 100% 34%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
@@ -117,18 +117,9 @@ All colors MUST be HSL.
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
-  
-  .animate-shimmer {
-    animation: shimmer 3s ease-in-out infinite;
-  }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-20px); }
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
 }

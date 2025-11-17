@@ -26,7 +26,7 @@ export default {
       },
       colors: {
         brand: {
-          blue: 'hsl(245, 88%, 46%)', // #2719D2 - Royal Blue
+          blue: 'hsl(215, 100%, 33.5%)', // #0047AB - Royal Blue
           white: '#FFFFFF',
           black: '#000000',
         },
@@ -96,15 +96,10 @@ export default {
             height: "0",
           },
         },
-        shimmer: {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(100%)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        shimmer: "shimmer 3s ease-in-out infinite",
       },
     },
   },

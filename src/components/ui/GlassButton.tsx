@@ -13,7 +13,7 @@ interface GlassButtonProps {
 
 export const GlassButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, GlassButtonProps>(
   ({ children, to, onClick, className, variant = "pill", asChild = false }, ref) => {
-    const baseStyles = "relative overflow-hidden backdrop-blur-md border transition-all duration-300 flex items-center justify-center";
+    const baseStyles = "relative overflow-hidden backdrop-blur-xl border transition-all duration-300 flex items-center justify-center";
     
     const variantStyles = {
       pill: "px-6 py-2.5 rounded-full text-sm font-medium whitespace-nowrap",
@@ -21,13 +21,12 @@ export const GlassButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gla
     };
 
     const glassStyles = `
-      bg-gradient-to-br from-brand-white/35 to-brand-white/25
-      border-brand-white/30
-      shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_16px_rgba(0,0,0,0.15)]
-      hover:from-brand-white/45 hover:to-brand-white/35
-      hover:border-brand-white/50
-      hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_6px_20px_rgba(0,0,0,0.2)]
-      hover:scale-105
+      bg-brand-white/10
+      border-brand-white/20
+      shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]
+      hover:bg-brand-white/20
+      hover:border-brand-white/30
+      hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]
       active:scale-95
       text-brand-white
     `;

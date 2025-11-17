@@ -31,12 +31,14 @@ export const Header = () => {
             <GlassButton variant="icon">
               <User className="w-5 h-5" />
             </GlassButton>
-            <GlassButton variant="icon" className="relative">
-              <ShoppingBag className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold">
+            <div className="relative">
+              <GlassButton variant="icon">
+                <ShoppingBag className="w-5 h-5" />
+              </GlassButton>
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold pointer-events-none">
                 0
               </span>
-            </GlassButton>
+            </div>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -80,13 +82,15 @@ export const Header = () => {
                 <User className="w-4 h-4" />
                 Account
               </GlassButton>
-              <GlassButton variant="pill" className="flex-1 flex items-center justify-center gap-2 relative">
-                <ShoppingBag className="w-4 h-4" />
-                Cart
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold">
+              <div className="relative flex-1">
+                <GlassButton variant="pill" className="w-full flex items-center justify-center gap-2">
+                  <ShoppingBag className="w-4 h-4" />
+                  Cart
+                </GlassButton>
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold pointer-events-none">
                   0
                 </span>
-              </GlassButton>
+              </div>
             </div>
           </nav>
         )}

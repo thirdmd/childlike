@@ -13,29 +13,33 @@ interface GlassButtonProps {
 
 export const GlassButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, GlassButtonProps>(
   ({ children, to, onClick, className, variant = "pill", asChild = false }, ref) => {
-    const baseStyles = "relative overflow-hidden backdrop-blur-xl border transition-all duration-300 flex items-center justify-center";
-    
     const variantStyles = {
-      pill: "px-6 py-2.5 rounded-full text-sm font-medium whitespace-nowrap",
-      icon: "w-10 h-10 rounded-full",
+      pill: "px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap",
+      icon: "w-11 h-11 rounded-full",
     };
 
-    const glassStyles = `
-      bg-brand-white/10
-      border-brand-white/20
-      shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]
-      hover:bg-brand-white/20
-      hover:border-brand-white/30
-      hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]
-      active:scale-95
-      text-brand-white
-    `;
-
     const combinedClassName = cn(
-      baseStyles,
+      "group relative overflow-hidden transition-all duration-300 flex items-center justify-center",
       variantStyles[variant],
-      glassStyles,
       className
+    );
+
+    const content = (
+      <>
+        {/* Glass background layer */}
+        <div className="absolute inset-0 bg-brand-white/10 backdrop-blur-md border border-brand-white/20" />
+        
+        {/* Hover gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-white/20 to-brand-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        {/* Inner glow effect on hover */}
+        <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(255,255,255,0)] group-hover:shadow-[inset_0_0_20px_rgba(255,255,255,0.1)] transition-shadow duration-300" />
+        
+        {/* Content */}
+        <span className="relative text-brand-white drop-shadow-sm flex items-center justify-center gap-2">
+          {children}
+        </span>
+      </>
     );
 
     if (to) {
@@ -45,7 +49,7 @@ export const GlassButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gla
           className={combinedClassName}
           ref={ref as React.Ref<HTMLAnchorElement>}
         >
-          {children}
+          {content}
         </Link>
       );
     }
@@ -56,7 +60,7 @@ export const GlassButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gla
         className={combinedClassName}
         ref={ref as React.Ref<HTMLButtonElement>}
       >
-        {children}
+        {content}
       </button>
     );
   }

@@ -7,6 +7,8 @@ interface BrandButtonProps {
   href?: string;
   onClick?: () => void;
   className?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 export const BrandButton = ({ 
@@ -14,7 +16,9 @@ export const BrandButton = ({
   variant = "primary", 
   href, 
   onClick,
-  className = "" 
+  className = "",
+  type = "button",
+  disabled = false
 }: BrandButtonProps) => {
   const baseStyles = "inline-flex items-center justify-center px-8 py-3 text-sm font-semibold transition-all rounded-md";
   
@@ -34,7 +38,7 @@ export const BrandButton = ({
   }
 
   return (
-    <button onClick={onClick} className={styles}>
+    <button onClick={onClick} type={type} disabled={disabled} className={`${styles} disabled:opacity-50 disabled:cursor-not-allowed`}>
       {children}
     </button>
   );

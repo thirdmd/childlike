@@ -17,7 +17,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation - Pill style buttons - Centered */}
-          <nav className="hidden lg:flex items-center justify-center gap-3 flex-1">
+          <nav className="hidden lg:flex items-center justify-center gap-3 flex-1 ml-[-100px]">
             {siteConfig.primaryNav.map((item) => (
               <Link
                 key={item.path}

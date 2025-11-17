@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { siteConfig } from "@/config/site";
 import { User, ShoppingBag } from "lucide-react";
+import childlikeLogo from "@/assets/childlike-logo.png";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,9 +13,11 @@ export const Header = () => {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <div className="h-10 w-36 bg-brand-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center border border-brand-white/20">
-              <span className="text-brand-white/40 text-xs font-semibold tracking-wider">LOGO</span>
-            </div>
+            <img 
+              src={childlikeLogo} 
+              alt="Childlike" 
+              className="h-8 w-auto"
+            />
           </Link>
           
           {/* Desktop Navigation - Pill style buttons */}

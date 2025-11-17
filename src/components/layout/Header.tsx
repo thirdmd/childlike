@@ -10,14 +10,14 @@ export const Header = () => {
   return (
     <header className="bg-brand-blue sticky top-0 z-50 backdrop-blur-xl">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-3 h-20 items-center lg:items-center">
+        <div className="flex h-20 items-center justify-between lg:justify-start">
           {/* Logo */}
           <Link to="/" className="flex items-center justify-start">
             <img src={childlikeLogo} alt="Childlike" className="h-[52px] w-auto" />
           </Link>
 
           {/* Desktop Navigation - Pill style buttons - Centered */}
-          <nav className="hidden lg:flex items-center justify-center gap-3">
+          <nav className="hidden lg:flex items-center justify-center gap-3 flex-1">
             {siteConfig.primaryNav.map((item) => (
               <Link
                 key={item.path}

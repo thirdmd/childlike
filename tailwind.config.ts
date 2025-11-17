@@ -26,7 +26,7 @@ export default {
       },
       colors: {
         brand: {
-          blue: 'hsl(215, 100%, 33.5%)', // #0047AB - Royal Blue
+          blue: 'hsl(245, 88%, 46%)', // #2719D2 - Royal Blue
           white: '#FFFFFF',
           black: '#000000',
         },

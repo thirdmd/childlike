@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Childlike Brand Colors */
-    --brand-blue: 216 100% 34%;
+    --brand-blue: 245 88% 46%;
     --brand-white: 0 0% 100%;
     --brand-black: 0 0% 0%;
     
@@ -22,7 +22,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 216 100% 34%;
+    --primary: 245 88% 46%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;

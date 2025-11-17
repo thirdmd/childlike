@@ -10,14 +10,14 @@ export const Header = () => {
   return (
     <header className="bg-brand-blue sticky top-0 z-50 backdrop-blur-xl">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex h-20 items-center justify-between">
+        <div className="grid grid-cols-3 h-20 items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center justify-start">
             <img src={childlikeLogo} alt="Childlike" className="h-[52px] w-auto" />
           </Link>
 
-          {/* Desktop Navigation - Pill style buttons */}
-          <nav className="hidden lg:flex items-center gap-3">
+          {/* Desktop Navigation - Pill style buttons - Centered */}
+          <nav className="hidden lg:flex items-center justify-center gap-3">
             {siteConfig.primaryNav.map((item) => (
               <Link
                 key={item.path}
@@ -30,7 +30,7 @@ export const Header = () => {
           </nav>
 
           {/* Right side - User & Cart icons */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center justify-end gap-3">
             <button className="w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 transition-all duration-300">
               <User className="w-5 h-5 text-brand-white" />
             </button>

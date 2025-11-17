@@ -6,18 +6,37 @@ import { homeConfig } from "@/config/home";
 
 const Home = () => {
   return (
-    <Page>
-      {/* Hero Section - Full Viewport, Product-Focused */}
-      <Section className="min-h-screen bg-brand-blue flex items-center justify-center py-0">
-        <Container size="xl">
-          <div className="flex items-center justify-center min-h-screen">
-            {/* Large Product Image Placeholder */}
-            <div className="w-full max-w-xl aspect-square bg-brand-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-              <p className="text-brand-white/40 text-small">3D Product Visual</p>
+    <Page className="bg-brand-blue overflow-hidden">
+      {/* Hero - Full Viewport */}
+      <section className="relative min-h-screen flex items-center justify-center">
+        {/* Subtle gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-blue via-brand-blue to-[hsl(216,100%,30%)]" />
+        
+        {/* Floating shadow behind product for depth */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-black/20 rounded-full blur-[120px]" />
+        
+        {/* Product container */}
+        <div className="relative z-10 w-full max-w-2xl px-8">
+          <div className="relative aspect-square animate-float">
+            {/* Glow effect behind product */}
+            <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
+            
+            {/* Product placeholder - this is where 3D render goes */}
+            <div className="relative w-full h-full flex items-center justify-center">
+              <div className="w-[85%] h-[85%] bg-brand-white/10 backdrop-blur-md rounded-3xl border border-brand-white/20 flex items-center justify-center">
+                <p className="text-brand-white/30 text-sm font-medium tracking-wide">3D PRODUCT</p>
+              </div>
             </div>
           </div>
-        </Container>
-      </Section>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-brand-white/30 rounded-full flex items-start justify-center p-2">
+            <div className="w-1.5 h-1.5 bg-brand-white/50 rounded-full" />
+          </div>
+        </div>
+      </section>
 
       {/* Pillars Section */}
       <Section className="bg-background">

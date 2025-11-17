@@ -29,37 +29,39 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Right side - User & Cart icons */}
-          <div className="hidden lg:flex items-center justify-end gap-3">
-            <button className="w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 transition-all duration-300">
-              <User className="w-5 h-5 text-brand-white" />
-            </button>
-            <button className="w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 transition-all duration-300 relative">
-              <ShoppingBag className="w-5 h-5 text-brand-white" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold">
-                0
-              </span>
+          {/* Right side - User & Cart icons + Mobile Toggle */}
+          <div className="flex items-center justify-end gap-3">
+            <div className="hidden lg:flex items-center gap-3">
+              <button className="w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 transition-all duration-300">
+                <User className="w-5 h-5 text-brand-white" />
+              </button>
+              <button className="w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 transition-all duration-300 relative">
+                <ShoppingBag className="w-5 h-5 text-brand-white" />
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold">
+                  0
+                </span>
+              </button>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-brand-white/10 transition-colors"
+              aria-label="Toggle menu"
+            >
+              <div className="w-6 h-5 flex flex-col justify-center gap-[7px] relative">
+                <span
+                  className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "rotate-45 absolute top-1/2 -translate-y-1/2" : ""}`}
+                />
+                <span
+                  className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""}`}
+                />
+                <span
+                  className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 absolute top-1/2 -translate-y-1/2" : ""}`}
+                />
+              </div>
             </button>
           </div>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-brand-white/10 transition-colors"
-            aria-label="Toggle menu"
-          >
-            <div className="w-6 h-5 flex flex-col justify-between">
-              <span
-                className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
-              />
-              <span
-                className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""}`}
-              />
-              <span
-                className={`block h-0.5 w-full bg-brand-white transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-              />
-            </div>
-          </button>
         </div>
 
         {/* Mobile Navigation */}

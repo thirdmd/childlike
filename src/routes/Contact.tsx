@@ -13,6 +13,8 @@ const Contact = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [isSubmittingWaitlist, setIsSubmittingWaitlist] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,6 +51,40 @@ const Contact = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmittingWaitlist(true);
+
+    try {
+      const { error } = await supabase
+        .from("waitlist_signups")
+        .insert({
+          email: waitlistEmail,
+          source: "website",
+        });
+
+      if (error) throw error;
+
+      // Clear form
+      setWaitlistEmail("");
+
+      // Show success message
+      toast({
+        title: "Joined the waitlist",
+        description: "We'll email you when we're ready.",
+      });
+    } catch (error) {
+      console.error("Failed to join waitlist:", error);
+      toast({
+        title: "Join failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingWaitlist(false);
     }
   };
 
@@ -96,6 +132,29 @@ const Contact = () => {
               {isLoading ? "Sending..." : "Send Message"}
             </Button>
           </form>
+
+          <div className="mt-12">
+            <h2 className="text-h2">Join the waitlist</h2>
+            <p className="mt-2 text-body text-foreground/70">
+              Be the first to know when we launch.
+            </p>
+
+            <form onSubmit={handleWaitlistSubmit} className="mt-4 max-w-md space-y-4">
+              <div>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={waitlistEmail}
+                  onChange={(e) => setWaitlistEmail(e.target.value)}
+                  required
+                  disabled={isSubmittingWaitlist}
+                />
+              </div>
+              <Button type="submit" disabled={isSubmittingWaitlist}>
+                {isSubmittingWaitlist ? "Joining..." : "Join Waitlist"}
+              </Button>
+            </form>
+          </div>
         </Container>
       </Section>
     </Page>

@@ -3,9 +3,13 @@ import { useState } from "react";
 import { siteConfig } from "@/config/site";
 import { User, ShoppingBag } from "lucide-react";
 import childlikeLogo from "@/assets/childlike-logo.png";
+import { useCart } from "@/context/CartContext";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { getItemCount } = useCart();
+  const itemCount = getItemCount();
+  const displayCount = itemCount > 9 ? "9+" : itemCount.toString();
 
   return (
     <header className="bg-brand-blue sticky top-0 z-50 backdrop-blur-xl">
@@ -38,7 +42,7 @@ export const Header = () => {
               <button className="w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 transition-all duration-300 relative">
                 <ShoppingBag className="w-5 h-5 text-brand-white" />
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold">
-                  0
+                  {displayCount}
                 </span>
               </button>
             </div>
@@ -88,7 +92,7 @@ export const Header = () => {
                 <ShoppingBag className="w-4 h-4" />
                 Cart
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold">
-                  0
+                  {displayCount}
                 </span>
               </button>
             </div>

@@ -1,11 +1,58 @@
 import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Page } from "@/components/layout/Page";
 import { productsConfig, getProductBySlug } from "@/config/products";
 import { BrandButton } from "@/components/ui/BrandButton";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { arrowButtonClassName } from "@/config/navigationRules";
+import { formatPrice } from "@/config/currency";
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const product = slug ? getProductBySlug(slug) : null;
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const [currentFlavorIndex, setCurrentFlavorIndex] = useState(0);
+
+  // Find initial product index
+  useEffect(() => {
+    if (slug) {
+      const index = productsConfig.findIndex((p) => p.slug === slug);
+      if (index >= 0) {
+        setCurrentProductIndex(index);
+        setCurrentFlavorIndex(0);
+      }
+    }
+  }, [slug]);
+
+  const product = productsConfig[currentProductIndex];
+  const currentFlavor = product?.flavors?.[currentFlavorIndex];
+
+  const handlePrevious = () => {
+    // Check if there are previous flavors
+    if (currentFlavorIndex > 0) {
+      setCurrentFlavorIndex(currentFlavorIndex - 1);
+    } else if (currentProductIndex > 0) {
+      // Move to previous product and its last flavor
+      setCurrentProductIndex(currentProductIndex - 1);
+      const prevProduct = productsConfig[currentProductIndex - 1];
+      setCurrentFlavorIndex(prevProduct.flavors.length - 1);
+    }
+  };
+
+  const handleNext = () => {
+    // Check if there are more flavors
+    if (product.flavors && currentFlavorIndex < product.flavors.length - 1) {
+      setCurrentFlavorIndex(currentFlavorIndex + 1);
+    } else if (currentProductIndex < productsConfig.length - 1) {
+      // Move to next product
+      setCurrentProductIndex(currentProductIndex + 1);
+      setCurrentFlavorIndex(0);
+    }
+  };
+
+  const canGoPrevious = currentFlavorIndex > 0 || currentProductIndex > 0;
+  const canGoNext =
+    (product.flavors && currentFlavorIndex < product.flavors.length - 1) ||
+    currentProductIndex < productsConfig.length - 1;
 
   if (!product) {
     return (
@@ -13,8 +60,8 @@ const ProductDetail = () => {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-h1 mb-4">Product not found</h1>
-            <Link to="/products" className="text-brand-blue hover:underline">
-              Back to products
+            <Link to="/" className="text-brand-blue hover:underline">
+              Back to home
             </Link>
           </div>
         </div>
@@ -23,40 +70,59 @@ const ProductDetail = () => {
   }
 
   return (
-    <Page className="bg-brand-blue">
-      {/* Back button */}
-      <div className="container mx-auto px-4 pt-6">
-        <Link 
-          to="/products" 
-          className="inline-flex items-center gap-2 text-brand-white/70 hover:text-brand-white transition-colors text-sm"
+    <div className="bg-brand-blue min-h-screen flex flex-col overflow-hidden">
+      {/* Back button - Icon only */}
+      <div className="container mx-auto px-4 py-0.5">
+        <Link
+          to="/"
+          className="inline-flex items-center justify-center w-8 h-8 text-brand-white/70 hover:text-brand-white transition-colors"
+          title="Back to home"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
         </Link>
       </div>
 
       {/* Product Detail Section */}
-      <div className="container mx-auto px-4 min-h-screen flex items-center py-12">
+      <div className="container mx-auto px-4 flex-1 flex items-start py-0">
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left: Product Name & Details */}
           <div className="lg:col-span-3 space-y-4">
-            <h1 className="text-4xl lg:text-5xl font-bold text-brand-white leading-tight">
-              {product.name}
-            </h1>
+            <div>
+              <h1 className="text-4xl lg:text-5xl font-bold text-brand-white leading-tight">
+                {product.name}
+              </h1>
+              {currentFlavor && (
+                <p className="text-brand-white/60 text-sm lg:text-base font-light mt-2 tracking-wide">
+                  {currentFlavor.name}
+                </p>
+              )}
+            </div>
             <p className="text-brand-white/70 text-lg">
               {product.tagline}
             </p>
           </div>
 
-          {/* Center: Large Product Image */}
-          <div className="lg:col-span-6 flex justify-center">
+          {/* Center: Large Product Image with Navigation Arrows */}
+          <div className="lg:col-span-6 flex justify-center items-center relative">
+            {/* Left Arrow - Visible only if can go previous */}
+            {canGoPrevious && (
+              <button
+                onClick={handlePrevious}
+                className={`${arrowButtonClassName} left-0`}
+                aria-label="Previous flavor or product"
+              >
+                <ChevronLeft className="w-6 h-6 text-brand-white" />
+              </button>
+            )}
+
+            {/* Product Image Container */}
             <div className="relative w-full max-w-md aspect-square">
               {/* Glow effect */}
               <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
-              
+
               {/* Product placeholder */}
               <div className="relative w-full h-full flex items-center justify-center">
                 <div className="w-[85%] h-[85%] bg-brand-white/10 backdrop-blur-md rounded-3xl border border-brand-white/20 flex items-center justify-center animate-float">
@@ -64,6 +130,17 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
+
+            {/* Right Arrow - Visible only if can go next */}
+            {canGoNext && (
+              <button
+                onClick={handleNext}
+                className={`${arrowButtonClassName} right-0`}
+                aria-label="Next flavor or product"
+              >
+                <ChevronRight className="w-6 h-6 text-brand-white" />
+              </button>
+            )}
           </div>
 
           {/* Right: Macros & Info */}
@@ -118,7 +195,7 @@ const ProductDetail = () => {
             {/* Center: Price */}
             <div className="text-center">
               <p className="text-5xl font-bold text-brand-white">
-                ${product.price.toFixed(2)}
+                {formatPrice(product.price)}
               </p>
             </div>
 
@@ -153,7 +230,25 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-    </Page>
+
+      {/* Flavor Navigation Indicators */}
+      {product.flavors && product.flavors.length > 0 && (
+        <div className="fixed bottom-28 left-1/2 -translate-x-1/2 flex gap-2">
+          {product.flavors.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentFlavorIndex(index)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                index === currentFlavorIndex
+                  ? "bg-brand-white"
+                  : "bg-brand-white/30 hover:bg-brand-white/60"
+              }`}
+              aria-label={`Go to flavor ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

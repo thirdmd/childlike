@@ -3,7 +3,7 @@ export const siteConfig = {
   siteDescription: "Pioneering product company fusing innovation, nutrition, design, and play",
   primaryNav: [
     { label: "Home", path: "/" },
-    { label: "Products", path: "/products" },
+    { label: "Products", path: "/products/chewy-protein-cookie" },
     { label: "About", path: "/about" },
     { label: "FAQ", path: "/faq" },
     { label: "Contact", path: "/contact" },

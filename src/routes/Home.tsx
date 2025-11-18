@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Page } from "@/components/layout/Page";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
@@ -16,7 +17,7 @@ const Home = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-black/20 rounded-full blur-[120px]" />
 
         {/* Product container */}
-        <div className="relative z-10 w-full max-w-2xl px-8">
+        <Link to="/products/chewy-protein-cookie" className="relative z-10 w-full max-w-2xl px-8 cursor-pointer group">
           <div className="relative aspect-square animate-float">
             {/* Glow effect behind product */}
             <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
@@ -28,7 +29,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Scroll indicator */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">

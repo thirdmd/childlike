@@ -4,6 +4,7 @@ import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { BrandButton } from "@/components/ui/BrandButton";
 import { homeConfig } from "@/config/home";
+import productImage from "@/assets/childlike 3d model.png";
 
 const Home = () => {
   return (
@@ -22,11 +23,13 @@ const Home = () => {
             {/* Glow effect behind product */}
             <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
 
-            {/* Product placeholder - this is where 3D render goes */}
+            {/* Product image */}
             <div className="relative w-full h-full flex items-center justify-center">
-              <div className="w-[85%] h-[85%] bg-brand-white/10 backdrop-blur-md rounded-3xl border border-brand-white/20 flex items-center justify-center">
-                <p className="text-brand-white/30 text-sm font-medium tracking-wide">3D PRODUCT</p>
-              </div>
+              <img
+                src={productImage}
+                alt="Childlike Protein Cookie"
+                className="w-[85%] h-[85%] object-contain drop-shadow-2xl"
+              />
             </div>
           </div>
         </Link>

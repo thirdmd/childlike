@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from "react";
 import { CartItem, CartState } from "@/lib/cartTypes";
+import { calculateSubtotal } from "@/lib/pricingService";
 
 interface CartContextValue {
   state: CartState;
@@ -9,6 +10,9 @@ interface CartContextValue {
   clearCart: () => void;
   getItemCount: () => number;
   getSubtotal: () => number;
+  // Reactive computed values for components to subscribe to
+  itemCount: number;
+  subtotal: number;
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
@@ -17,9 +21,58 @@ const CART_STORAGE_KEY = "childlike-cart";
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<CartState>(() => {
-    // Initialize from localStorage if available
-    const stored = localStorage.getItem(CART_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : { items: [] };
+    // SECURITY: Safely load from localStorage with validation
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+
+      if (!stored) {
+        return { items: [] };
+      }
+
+      const parsed = JSON.parse(stored);
+
+      // Validate the structure
+      if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.items)) {
+        console.warn("Invalid cart data in localStorage, resetting cart");
+        localStorage.removeItem(CART_STORAGE_KEY);
+        return { items: [] };
+      }
+
+      // Validate each item
+      const validItems = parsed.items.filter((item: any) => {
+        return (
+          item &&
+          typeof item === "object" &&
+          typeof item.productId === "string" &&
+          item.productId.trim().length > 0 &&
+          typeof item.name === "string" &&
+          item.name.trim().length > 0 &&
+          typeof item.price === "number" &&
+          item.price > 0 &&
+          isFinite(item.price) &&
+          Number.isInteger(item.quantity) &&
+          item.quantity > 0 &&
+          item.quantity <= 99
+        );
+      });
+
+      // If validation removed items, log warning
+      if (validItems.length !== parsed.items.length) {
+        console.warn(`Removed ${parsed.items.length - validItems.length} invalid items from cart`);
+      }
+
+      // SECURITY: Limit cart size on load
+      if (validItems.length > 50) {
+        console.warn("Cart exceeded maximum size, keeping first 50 items");
+        return { items: validItems.slice(0, 50) };
+      }
+
+      return { items: validItems };
+    } catch (error) {
+      console.error("Failed to load cart from localStorage:", error);
+      localStorage.removeItem(CART_STORAGE_KEY);
+      return { items: [] };
+    }
   });
 
   // Sync to localStorage whenever state changes
@@ -28,6 +81,32 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [state]);
 
   const addItem = (item: Omit<CartItem, "quantity">, quantity = 1) => {
+    // SECURITY: Validate all inputs before processing
+    if (!item || typeof item !== "object") {
+      console.error("Invalid item: must be an object");
+      return;
+    }
+
+    if (!item.productId || typeof item.productId !== "string") {
+      console.error("Invalid item: missing or invalid productId");
+      return;
+    }
+
+    if (!item.name || typeof item.name !== "string" || item.name.trim().length === 0) {
+      console.error("Invalid item: missing or invalid name");
+      return;
+    }
+
+    if (typeof item.price !== "number" || item.price <= 0 || !isFinite(item.price)) {
+      console.error("Invalid item: price must be a positive number");
+      return;
+    }
+
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
+      console.error("Invalid quantity: must be an integer between 1 and 99");
+      return;
+    }
+
     setState((prev) => {
       const existingIndex = prev.items.findIndex(
         (i) => i.productId === item.productId
@@ -36,39 +115,91 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       if (existingIndex >= 0) {
         // Product exists, increase quantity
         const updated = [...prev.items];
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          quantity: updated[existingIndex].quantity + quantity,
-        };
+        const newQuantity = updated[existingIndex].quantity + quantity;
+
+        // SECURITY: Prevent cart overflow attacks
+        if (newQuantity > 99) {
+          console.warn("Maximum quantity (99) reached for this product");
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            quantity: 99,
+          };
+        } else {
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            quantity: newQuantity,
+          };
+        }
+
+        // TODO: Sync to Supabase when user is authenticated
+        // cartService.syncToDatabase({ items: updated }, user?.id);
         return { items: updated };
       } else {
+        // SECURITY: Prevent cart stuffing attacks (limit total items)
+        if (prev.items.length >= 50) {
+          console.warn("Maximum cart items (50) reached");
+          return prev;
+        }
+
         // New product, add to cart
-        return { items: [...prev.items, { ...item, quantity }] };
+        const newItems = [...prev.items, { ...item, quantity }];
+        // TODO: Sync to Supabase when user is authenticated
+        // cartService.syncToDatabase({ items: newItems }, user?.id);
+        return { items: newItems };
       }
     });
   };
 
   const removeItem = (productId: string) => {
-    setState((prev) => ({
-      items: prev.items.filter((item) => item.productId !== productId),
-    }));
+    // SECURITY: Validate productId
+    if (!productId || typeof productId !== "string" || productId.trim().length === 0) {
+      console.error("Invalid productId for removal");
+      return;
+    }
+
+    setState((prev) => {
+      const newItems = prev.items.filter((item) => item.productId !== productId);
+      // TODO: Sync to Supabase when user is authenticated
+      // cartService.syncToDatabase({ items: newItems }, user?.id);
+      return { items: newItems };
+    });
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
+    // SECURITY: Validate inputs
+    if (!productId || typeof productId !== "string" || productId.trim().length === 0) {
+      console.error("Invalid productId for quantity update");
+      return;
+    }
+
+    if (!Number.isInteger(quantity) || quantity < 0) {
+      console.error("Invalid quantity: must be a non-negative integer");
+      return;
+    }
+
+    // Remove item if quantity is 0
+    if (quantity === 0) {
       removeItem(productId);
       return;
     }
 
-    setState((prev) => ({
-      items: prev.items.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item
-      ),
-    }));
+    // SECURITY: Enforce maximum quantity
+    const safeQuantity = Math.min(quantity, 99);
+
+    setState((prev) => {
+      const newItems = prev.items.map((item) =>
+        item.productId === productId ? { ...item, quantity: safeQuantity } : item
+      );
+      // TODO: Sync to Supabase when user is authenticated
+      // cartService.syncToDatabase({ items: newItems }, user?.id);
+      return { items: newItems };
+    });
   };
 
   const clearCart = () => {
     setState({ items: [] });
+    // TODO: Clear from Supabase when user is authenticated
+    // cartService.clearDatabase(user?.id, sessionId);
   };
 
   const getItemCount = (): number => {
@@ -76,11 +207,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getSubtotal = (): number => {
-    return state.items.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    return calculateSubtotal(state.items);
   };
+
+  // Reactive computed values - automatically update when state changes
+  // Components can subscribe to these without calling functions
+  const itemCount = useMemo(() => {
+    return state.items.reduce((total, item) => total + item.quantity, 0);
+  }, [state.items]);
+
+  const subtotal = useMemo(() => {
+    return calculateSubtotal(state.items);
+  }, [state.items]);
 
   return (
     <CartContext.Provider
@@ -92,6 +230,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         clearCart,
         getItemCount,
         getSubtotal,
+        // Reactive values for component subscription
+        itemCount,
+        subtotal,
       }}
     >
       {children}

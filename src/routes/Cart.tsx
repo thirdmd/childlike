@@ -1,0 +1,183 @@
+import { Link } from "react-router-dom";
+import { Page } from "@/components/layout/Page";
+import { useCart } from "@/context/CartContext";
+import { formatPrice } from "@/config/currency";
+import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
+import { Trash2, ShoppingBag } from "lucide-react";
+import { calculateItemTotal } from "@/lib/pricingService";
+import cartProductImage from "@/assets/cartview_cookie_chocochip.png";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+
+const Cart = () => {
+  const { state, updateQuantity, removeItem, subtotal, itemCount } = useCart();
+  const { toast } = useToast();
+
+  // Handle delete with confirmation
+  const handleDeleteItem = (productId: string, productName: string) => {
+    toast({
+      title: "Remove from cart?",
+      description: `Are you sure you want to remove "${productName}" from your cart?`,
+      action: (
+        <ToastAction
+          altText="Confirm delete"
+          onClick={() => removeItem(productId)}
+          className="bg-red-500 hover:bg-red-600 text-white"
+        >
+          Remove
+        </ToastAction>
+      ),
+    });
+  };
+
+  if (itemCount === 0) {
+    return (
+      <Page>
+        <div className="min-h-screen flex items-center justify-center bg-brand-blue">
+          <div className="text-center max-w-md mx-auto px-4">
+            <ShoppingBag className="w-16 h-16 text-brand-white/40 mx-auto mb-4" />
+            <h1 className="text-4xl font-bold text-brand-white mb-4">Your cart is empty</h1>
+            <p className="text-brand-white/70 mb-8">
+              Add some products to your cart to get started.
+            </p>
+            <Link to="/" className={ctaPrimaryButtonClassName}>
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
+      </Page>
+    );
+  }
+
+  return (
+    <div className="bg-brand-blue min-h-screen">
+      {/* Header */}
+      <div className="container mx-auto px-4 py-8">
+        <Link
+          to="/"
+          className="inline-flex items-center text-brand-white/70 hover:text-brand-white transition-colors mb-6"
+        >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Continue Shopping
+        </Link>
+
+        <h1 className="text-4xl lg:text-5xl font-bold text-brand-white mb-2">Your Cart</h1>
+        <p className="text-brand-white/60 mb-8">
+          {itemCount} {itemCount === 1 ? "item" : "items"}
+        </p>
+      </div>
+
+      {/* Cart Items */}
+      <div className="container mx-auto px-4 pb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Items List */}
+          <div className="lg:col-span-2 space-y-4">
+            {state.items.map((item) => (
+              <div
+                key={item.productId}
+                className="bg-brand-white/10 backdrop-blur-sm border border-brand-white/20 rounded-2xl p-6 flex items-center gap-6"
+              >
+                {/* Product Image */}
+                <img
+                  src={cartProductImage}
+                  alt={item.flavorName ? `${item.name} - ${item.flavorName}` : item.name}
+                  className="w-24 h-24 object-cover rounded-xl flex-shrink-0"
+                />
+
+                {/* Product Info */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold text-brand-white mb-1">
+                    {item.name}
+                    {item.flavorName && ` - ${item.flavorName}`}
+                  </h3>
+                  <p className="text-brand-white/60 text-sm mb-3">{formatPrice(item.price)}</p>
+
+                  {/* Quantity Controls */}
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                      className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white"
+                      aria-label="Decrease quantity"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                      </svg>
+                    </button>
+                    <span className="text-brand-white font-semibold min-w-[2ch] text-center">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                      className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white"
+                      aria-label="Increase quantity"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Price & Remove */}
+                <div className="flex flex-col items-end gap-4">
+                  <p className="text-2xl font-bold text-brand-white">
+                    {formatPrice(calculateItemTotal(item.price, item.quantity))}
+                  </p>
+                  <button
+                    onClick={() =>
+                      handleDeleteItem(
+                        item.productId,
+                        item.flavorName ? `${item.name} - ${item.flavorName}` : item.name
+                      )
+                    }
+                    className="text-brand-white/60 hover:text-red-400 transition-colors"
+                    aria-label="Remove item"
+                    title="Click to remove item from cart"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Order Summary */}
+          <div className="lg:col-span-1">
+            <div className="bg-brand-white/10 backdrop-blur-sm border border-brand-white/20 rounded-2xl p-6 sticky top-24">
+              <h2 className="text-2xl font-bold text-brand-white mb-6">Order Summary</h2>
+
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between text-brand-white/80">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-brand-white/80">
+                  <span>Shipping</span>
+                  <span>Free</span>
+                </div>
+                <div className="border-t border-brand-white/20 pt-3 mt-3">
+                  <div className="flex justify-between text-brand-white text-xl font-bold">
+                    <span>Total</span>
+                    <span>{formatPrice(subtotal)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <button className={`w-full ${ctaPrimaryButtonClassName} justify-center`}>
+                Proceed to Checkout
+              </button>
+
+              <p className="text-brand-white/60 text-xs text-center mt-4">
+                Secure checkout powered by Supabase
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Cart;

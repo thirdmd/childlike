@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Page } from "@/components/layout/Page";
 import { productsConfig, getProductBySlug } from "@/config/products";
@@ -7,11 +7,20 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { arrowButtonClassName, isProductValid } from "@/config/navigationRules";
 import { formatPrice } from "@/config/currency";
 import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
+import { useCart } from "@/context/CartContext";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { calculateItemTotal, logAnalyticsEvent, createAnalyticsEvent } from "@/lib/pricingService";
+import productImage from "@/assets/childlike product.png";
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { addItem } = useCart();
+  const { toast } = useToast();
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentFlavorIndex, setCurrentFlavorIndex] = useState(0);
+  const [quantity, setQuantity] = useState(0);
 
   // Find initial product index
   useEffect(() => {
@@ -26,6 +35,13 @@ const ProductDetail = () => {
 
   const product = productsConfig[currentProductIndex];
   const currentFlavor = product?.flavors?.[currentFlavorIndex];
+
+  // PRODUCTION-READY: Reset counter to 0 whenever product changes
+  // Counter is INDEPENDENT from cart - they are NOT connected
+  // This ensures clean UX and proper separation of concerns for backend integration
+  useEffect(() => {
+    setQuantity(0);
+  }, [product]);
 
   const handlePrevious = () => {
     // Check if there are previous flavors
@@ -60,6 +76,71 @@ const ProductDetail = () => {
         setCurrentFlavorIndex(0);
       }
     }
+  };
+
+  const buyNowHandler = () => {
+    if (!product || quantity === 0) return;
+
+    // Security: Validate inputs before processing
+    if (!product.id && !product.slug) {
+      console.error("Invalid product: missing identifier");
+      return;
+    }
+
+    if (quantity < 1 || quantity > 99) {
+      toast({
+        title: "Invalid quantity",
+        description: "Please select a quantity between 1 and 99",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Store quantity for toast message before reset
+    const addedQuantity = quantity;
+    const totalPrice = calculateItemTotal(product.price, quantity);
+
+    // CRITICAL: Generate unique productId that includes flavor
+    // Format: "product-slug-flavor-slug" or just "product-slug" if no flavor
+    const uniqueProductId = currentFlavor
+      ? `${product.slug}-${currentFlavor.slug}`
+      : product.slug;
+
+    // Build full display name with flavor
+    const fullProductName = currentFlavor
+      ? `${product.name} - ${currentFlavor.name}`
+      : product.name;
+
+    // Add item to cart with flavor information
+    addItem(
+      {
+        productId: uniqueProductId,
+        slug: product.slug,
+        name: product.name,
+        price: product.price,
+        flavorId: currentFlavor?.id,
+        flavorName: currentFlavor?.name,
+      },
+      quantity
+    );
+
+    // Log analytics event
+    const analyticsEvent = createAnalyticsEvent("add_to_cart", product, quantity);
+    logAnalyticsEvent(analyticsEvent);
+
+    // Reset quantity to 0 IMMEDIATELY after adding
+    setQuantity(0);
+
+    // Show success notification with action
+    toast({
+      title: "Added to cart",
+      description: `${addedQuantity}x ${fullProductName} - ${formatPrice(totalPrice)}`,
+      action: (
+        <ToastAction altText="Go to cart" onClick={() => navigate("/cart")}>
+          Go to Cart
+        </ToastAction>
+      ),
+    });
   };
 
   const canGoPrevious = currentFlavorIndex > 0 || (currentProductIndex > 0 && productsConfig.slice(0, currentProductIndex).some(isProductValid));
@@ -133,11 +214,13 @@ const ProductDetail = () => {
               {/* Glow effect */}
               <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
 
-              {/* Product placeholder */}
+              {/* Product Image */}
               <div className="relative w-full h-full flex items-center justify-center">
-                <div className="w-[85%] h-[85%] bg-brand-white/10 backdrop-blur-md rounded-3xl border border-brand-white/20 flex items-center justify-center animate-float">
-                  <p className="text-brand-white/30 text-sm font-medium">PRODUCT IMAGE</p>
-                </div>
+                <img
+                  src={productImage}
+                  alt={currentFlavor ? `${product.name} - ${currentFlavor.name}` : product.name}
+                  className="w-[85%] h-[85%] object-contain drop-shadow-2xl animate-float"
+                />
               </div>
             </div>
 
@@ -204,37 +287,62 @@ const ProductDetail = () => {
 
             {/* Center: Price */}
             <div className="text-center">
-              <p className="text-3xl font-bold text-brand-white">
-                {formatPrice(product.price)}
-              </p>
+              {quantity > 0 ? (
+                <>
+                  <p className="text-sm text-brand-white/60 mb-1">
+                    {quantity}x {formatPrice(product.price)}
+                  </p>
+                  <p className="text-3xl font-bold text-brand-white">
+                    {formatPrice(calculateItemTotal(product.price, quantity))}
+                  </p>
+                </>
+              ) : (
+                <p className="text-3xl font-bold text-brand-white">
+                  {formatPrice(product.price)}
+                </p>
+              )}
             </div>
 
             {/* Right: Quantity + Buy Button */}
             <div className="flex items-center gap-4">
               {/* Quantity controls */}
               <div className="flex items-center gap-3 bg-brand-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
-                <button className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white">
+                <button
+                  onClick={() => setQuantity(Math.max(0, quantity - 1))}
+                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white"
+                  aria-label="Decrease quantity"
+                >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                   </svg>
                 </button>
-                <span className="text-brand-white font-semibold min-w-[2ch] text-center">1</span>
-                <button className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white">
+                <span className="text-brand-white font-semibold min-w-[2ch] text-center">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(Math.min(99, quantity + 1))}
+                  disabled={quantity >= 99}
+                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Increase quantity"
+                  title={quantity >= 99 ? "Maximum quantity reached" : "Increase quantity"}
+                >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                 </button>
               </div>
 
-              {/* Buy button - Primary CTA */}
-              <button className={ctaPrimaryButtonClassName}>
+              {/* Add to Cart button - Primary CTA */}
+              <button
+                onClick={buyNowHandler}
+                disabled={quantity === 0}
+                className={ctaPrimaryButtonClassName}
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <rect x="3" y="3" width="7" height="7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                   <rect x="14" y="3" width="7" height="7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                   <rect x="14" y="14" width="7" height="7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                   <rect x="3" y="14" width="7" height="7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                {product.status === 'available' ? 'Buy Now' : 'Join Waitlist'}
+                Add to Cart
               </button>
             </div>
           </div>

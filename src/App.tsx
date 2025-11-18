@@ -8,6 +8,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import Home from "./routes/Home";
 import ProductDetail from "./routes/ProductDetail";
+import Cart from "./routes/Cart";
 import About from "./routes/About";
 import FAQ from "./routes/FAQ";
 import Contact from "./routes/Contact";
@@ -26,6 +27,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products/:slug" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
             <Route path="/about" element={<About />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact" element={<Contact />} />

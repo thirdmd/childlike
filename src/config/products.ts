@@ -72,6 +72,22 @@ export const productsConfig: Product[] = [
     },
     flavors: [],
   },
+  {
+    id: "product-3",
+    slug: "product-3",
+    name: "",
+    tagline: "",
+    description: "",
+    status: "coming_soon",
+    price: 0,
+    macros: {
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      sugar: 0,
+    },
+    flavors: [],
+  },
 ];
 
 export const getProductBySlug = (slug: string): Product | undefined => {

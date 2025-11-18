@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -150,9 +151,9 @@ const Contact = () => {
                   disabled={isSubmittingWaitlist}
                 />
               </div>
-              <Button type="submit" disabled={isSubmittingWaitlist}>
+              <button type="submit" disabled={isSubmittingWaitlist} className={ctaPrimaryButtonClassName}>
                 {isSubmittingWaitlist ? "Joining..." : "Join Waitlist"}
-              </Button>
+              </button>
             </form>
           </div>
         </Container>

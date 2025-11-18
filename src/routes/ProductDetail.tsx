@@ -4,8 +4,9 @@ import { Page } from "@/components/layout/Page";
 import { productsConfig, getProductBySlug } from "@/config/products";
 import { BrandButton } from "@/components/ui/BrandButton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { arrowButtonClassName } from "@/config/navigationRules";
+import { arrowButtonClassName, isProductValid } from "@/config/navigationRules";
 import { formatPrice } from "@/config/currency";
+import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -31,10 +32,16 @@ const ProductDetail = () => {
     if (currentFlavorIndex > 0) {
       setCurrentFlavorIndex(currentFlavorIndex - 1);
     } else if (currentProductIndex > 0) {
-      // Move to previous product and its last flavor
-      setCurrentProductIndex(currentProductIndex - 1);
-      const prevProduct = productsConfig[currentProductIndex - 1];
-      setCurrentFlavorIndex(prevProduct.flavors.length - 1);
+      // Find previous valid product
+      let prevValidIndex = currentProductIndex - 1;
+      while (prevValidIndex >= 0 && !isProductValid(productsConfig[prevValidIndex])) {
+        prevValidIndex--;
+      }
+      if (prevValidIndex >= 0) {
+        setCurrentProductIndex(prevValidIndex);
+        const prevProduct = productsConfig[prevValidIndex];
+        setCurrentFlavorIndex(prevProduct.flavors.length > 0 ? prevProduct.flavors.length - 1 : 0);
+      }
     }
   };
 
@@ -43,16 +50,22 @@ const ProductDetail = () => {
     if (product.flavors && currentFlavorIndex < product.flavors.length - 1) {
       setCurrentFlavorIndex(currentFlavorIndex + 1);
     } else if (currentProductIndex < productsConfig.length - 1) {
-      // Move to next product
-      setCurrentProductIndex(currentProductIndex + 1);
-      setCurrentFlavorIndex(0);
+      // Find next valid product
+      let nextValidIndex = currentProductIndex + 1;
+      while (nextValidIndex < productsConfig.length && !isProductValid(productsConfig[nextValidIndex])) {
+        nextValidIndex++;
+      }
+      if (nextValidIndex < productsConfig.length) {
+        setCurrentProductIndex(nextValidIndex);
+        setCurrentFlavorIndex(0);
+      }
     }
   };
 
-  const canGoPrevious = currentFlavorIndex > 0 || currentProductIndex > 0;
+  const canGoPrevious = currentFlavorIndex > 0 || (currentProductIndex > 0 && productsConfig.slice(0, currentProductIndex).some(isProductValid));
   const canGoNext =
     (product.flavors && currentFlavorIndex < product.flavors.length - 1) ||
-    currentProductIndex < productsConfig.length - 1;
+    (currentProductIndex < productsConfig.length - 1 && productsConfig.slice(currentProductIndex + 1).some(isProductValid));
 
   if (!product) {
     return (
@@ -70,9 +83,9 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="bg-brand-blue min-h-screen flex flex-col overflow-hidden">
+    <div className="bg-brand-blue h-screen flex flex-col overflow-hidden">
       {/* Back button - Icon only */}
-      <div className="container mx-auto px-4 py-0.5">
+      <div className="container mx-auto px-4 py-0">
         <Link
           to="/"
           className="inline-flex items-center justify-center w-8 h-8 text-brand-white/70 hover:text-brand-white transition-colors"
@@ -85,8 +98,8 @@ const ProductDetail = () => {
       </div>
 
       {/* Product Detail Section */}
-      <div className="container mx-auto px-4 flex-1 flex items-start py-0">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="container mx-auto px-4 flex-1 flex items-center pt-2 pb-0">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center -mt-48">
           
           {/* Left: Product Name & Details */}
           <div className="lg:col-span-3 space-y-4">
@@ -95,14 +108,11 @@ const ProductDetail = () => {
                 {product.name}
               </h1>
               {currentFlavor && (
-                <p className="text-brand-white/60 text-sm lg:text-base font-light mt-2 tracking-wide">
+                <p className="text-brand-white/60 text-base lg:text-lg font-light mt-2 tracking-wide">
                   {currentFlavor.name}
                 </p>
               )}
             </div>
-            <p className="text-brand-white/70 text-lg">
-              {product.tagline}
-            </p>
           </div>
 
           {/* Center: Large Product Image with Navigation Arrows */}
@@ -194,7 +204,7 @@ const ProductDetail = () => {
 
             {/* Center: Price */}
             <div className="text-center">
-              <p className="text-5xl font-bold text-brand-white">
+              <p className="text-3xl font-bold text-brand-white">
                 {formatPrice(product.price)}
               </p>
             </div>
@@ -216,8 +226,8 @@ const ProductDetail = () => {
                 </button>
               </div>
 
-              {/* Buy button */}
-              <button className="bg-brand-white text-brand-blue px-8 py-3 rounded-full font-semibold hover:bg-brand-white/90 transition-all flex items-center gap-2">
+              {/* Buy button - Primary CTA */}
+              <button className={ctaPrimaryButtonClassName}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <rect x="3" y="3" width="7" height="7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                   <rect x="14" y="3" width="7" height="7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />

@@ -1,3 +1,5 @@
+import type { Product } from "./products";
+
 /**
  * Centralized navigation arrow visibility rules
  * Use these rules across the entire app for consistent left/right arrow behavior
@@ -7,6 +9,15 @@ export interface NavigationState {
   canGoPrevious: boolean;
   canGoNext: boolean;
 }
+
+/**
+ * Determines if a product is navigable (has actual content)
+ * A product is valid if it has a name (not empty)
+ */
+export const isProductValid = (product: Product | undefined): boolean => {
+  if (!product) return false;
+  return product.name.trim().length > 0;
+};
 
 /**
  * Determines if navigation arrows should be visible

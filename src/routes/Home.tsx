@@ -17,17 +17,17 @@ const Home = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-black/20 rounded-full blur-[120px]" />
 
         {/* Product container */}
-        <Link to="/products/chewy-protein-cookie" className={`relative z-10 w-full max-w-2xl px-8 ${interactiveHoverEffect}`}>
+        <Link to="/products/chewy-protein-cookie" className="relative z-10 w-full max-w-2xl px-8">
           <div className="relative aspect-square animate-float">
             {/* Glow effect behind product */}
             <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
 
             {/* Product image */}
-            <div className="relative w-full h-full flex items-center justify-center">
+            <div className="relative w-full h-full flex items-center justify-center group">
               <img
                 src={productImage}
                 alt="Childlike Protein Cookie"
-                className="w-[85%] h-[85%] object-contain drop-shadow-2xl"
+                className="w-[85%] h-[85%] object-contain drop-shadow-2xl transition-transform duration-300 ease-in-out group-hover:scale-110"
               />
             </div>
           </div>

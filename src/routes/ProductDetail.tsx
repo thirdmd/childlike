@@ -11,7 +11,45 @@ import { useCart } from "@/context/CartContext";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { calculateItemTotal, logAnalyticsEvent, createAnalyticsEvent } from "@/lib/pricingService";
-import productImage from "@/assets/childlike product.png";
+import defaultProductImage from "@/assets/productview_cookie_chocochip.png";
+
+/**
+ * CENTRALIZED PRODUCT IMAGE NAMING CONVENTION
+ * Format: productview_(product)_(flavor).png
+ *
+ * Examples:
+ * - productview_cookie_chocochip.png → Chewy Protein Cookie - Chocolate Chip
+ * - productview_cookie_peanutbutter.png → Chewy Protein Cookie - Peanut Butter
+ * - productview_cookie_pistachio.png → Chewy Protein Cookie - Pistachio Biskit
+ */
+
+// Import product images following naming convention
+import productview_cookie_chocochip from "@/assets/productview_cookie_chocochip.png";
+// Future imports (add as images become available):
+// import productview_cookie_peanutbutter from "@/assets/productview_cookie_peanutbutter.png";
+// import productview_cookie_pistachio from "@/assets/productview_cookie_pistachio.png";
+
+/**
+ * Centralized mapping: product-slug + flavor-slug → image
+ * Key format matches the unique productId format used in cart system
+ */
+const productFlavorImages: Record<string, string> = {
+  "chewy-protein-cookie-chocolate-chip": productview_cookie_chocochip,
+  // Future mappings (uncomment when images are added):
+  // "chewy-protein-cookie-peanut-butter": productview_cookie_peanutbutter,
+  // "chewy-protein-cookie-pistachio-biskit": productview_cookie_pistachio,
+};
+
+/**
+ * Get product image based on product and flavor
+ * Falls back to default if no specific image exists
+ */
+const getProductImage = (productSlug: string, flavorSlug?: string): string => {
+  if (!flavorSlug) return defaultProductImage;
+
+  const key = `${productSlug}-${flavorSlug}`;
+  return productFlavorImages[key] || defaultProductImage;
+};
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -35,6 +73,9 @@ const ProductDetail = () => {
 
   const product = productsConfig[currentProductIndex];
   const currentFlavor = product?.flavors?.[currentFlavorIndex];
+
+  // Get flavor-specific image using centralized naming convention
+  const productImageSrc = getProductImage(product?.slug, currentFlavor?.slug);
 
   // PRODUCTION-READY: Reset counter to 0 whenever product changes
   // Counter is INDEPENDENT from cart - they are NOT connected
@@ -217,7 +258,7 @@ const ProductDetail = () => {
               {/* Product Image */}
               <div className="relative w-full h-full flex items-center justify-center">
                 <img
-                  src={productImage}
+                  src={productImageSrc}
                   alt={currentFlavor ? `${product.name} - ${currentFlavor.name}` : product.name}
                   className="w-[85%] h-[85%] object-contain drop-shadow-2xl animate-float"
                 />

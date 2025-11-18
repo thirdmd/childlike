@@ -5,9 +5,44 @@ import { formatPrice } from "@/config/currency";
 import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
 import { Trash2, ShoppingBag } from "lucide-react";
 import { calculateItemTotal } from "@/lib/pricingService";
-import cartProductImage from "@/assets/cartview_cookie_chocochip.png";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+
+/**
+ * CENTRALIZED CART IMAGE NAMING CONVENTION
+ * Format: cartview_(product)_(flavor).png
+ *
+ * Examples:
+ * - cartview_cookie_chocochip.png → Chewy Protein Cookie - Chocolate Chip
+ * - cartview_cookie_peanutbutter.png → Chewy Protein Cookie - Peanut Butter
+ * - cartview_cookie_pistachio.png → Chewy Protein Cookie - Pistachio Biskit
+ */
+
+// Import cart images following naming convention
+import cartview_cookie_chocochip from "@/assets/cartview_cookie_chocochip.png";
+import defaultCartImage from "@/assets/cartview_cookie_chocochip.png"; // Fallback image
+// Future imports (add as images become available):
+// import cartview_cookie_peanutbutter from "@/assets/cartview_cookie_peanutbutter.png";
+// import cartview_cookie_pistachio from "@/assets/cartview_cookie_pistachio.png";
+
+/**
+ * Centralized mapping: productId (product-slug-flavor-slug) → cart image
+ * Key format matches the unique productId format used in cart system
+ */
+const cartFlavorImages: Record<string, string> = {
+  "chewy-protein-cookie-chocolate-chip": cartview_cookie_chocochip,
+  // Future mappings (uncomment when images are added):
+  // "chewy-protein-cookie-peanut-butter": cartview_cookie_peanutbutter,
+  // "chewy-protein-cookie-pistachio-biskit": cartview_cookie_pistachio,
+};
+
+/**
+ * Get cart image for a specific product/flavor combination
+ * Uses productId which already contains product-slug-flavor-slug format
+ */
+const getCartImage = (productId: string): string => {
+  return cartFlavorImages[productId] || defaultCartImage;
+};
 
 const Cart = () => {
   const { state, updateQuantity, removeItem, subtotal, itemCount } = useCart();
@@ -81,7 +116,7 @@ const Cart = () => {
               >
                 {/* Product Image */}
                 <img
-                  src={cartProductImage}
+                  src={getCartImage(item.productId)}
                   alt={item.flavorName ? `${item.name} - ${item.flavorName}` : item.name}
                   className="w-24 h-24 object-cover rounded-xl flex-shrink-0"
                 />

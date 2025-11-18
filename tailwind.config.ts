@@ -14,15 +14,15 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Bricolage Grotesque', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        'display': ['4rem', { lineHeight: '1.1', fontWeight: '700' }],
-        'h1': ['3rem', { lineHeight: '1.2', fontWeight: '700' }],
-        'h2': ['2rem', { lineHeight: '1.3', fontWeight: '600' }],
-        'h3': ['1.5rem', { lineHeight: '1.4', fontWeight: '600' }],
-        'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
-        'small': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
+        'display': ['4rem', { lineHeight: '1.1', fontWeight: '900' }],
+        'h1': ['3rem', { lineHeight: '1.2', fontWeight: '900' }],
+        'h2': ['2rem', { lineHeight: '1.3', fontWeight: '800' }],
+        'h3': ['1.5rem', { lineHeight: '1.4', fontWeight: '800' }],
+        'body': ['1rem', { lineHeight: '1.6', fontWeight: '700' }],
+        'small': ['0.875rem', { lineHeight: '1.5', fontWeight: '700' }],
       },
       colors: {
         brand: {

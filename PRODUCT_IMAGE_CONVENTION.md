@@ -133,31 +133,41 @@ const getCartImage = (productId: string): string => {
 
 ## Image Display Strategy
 
-**IMPORTANT:** Each flavor should only show its own image. Products without images show elegant placeholders.
+**IMPORTANT:** Each flavor should only show its own image. Products without images show the product/flavor title.
 
 ### How Images Work
 
 1. **Flavor WITH uploaded image** → Shows flavor-specific image
    - Example: Chocolate Chip shows `productview_cookie_chocochip.png`
 
-2. **Flavor WITHOUT uploaded image** → Shows PLACEHOLDER
-   - Example: Peanut Butter shows clean square placeholder (until real image is uploaded)
-   - Example: Pistachio Biskit shows clean square placeholder (until real image is uploaded)
+2. **Flavor WITHOUT uploaded image** → Shows product/flavor title
+   - **Product Detail View:** Displays product name and flavor name (centered, bold)
+   - **Cart View:** Shows elegant square placeholder (200×200)
+   - Example: Peanut Butter shows "Chewy Protein Cookie - Peanut Butter" until real image is uploaded
 
-3. **CENTRALIZED PLACEHOLDER SYSTEM**
-   - All products without images show elegant square placeholders
-   - Royal Blue (#0047AB) background with white geometric icon
-   - Consistent brand experience across all products
-   - Automatic - no setup needed for new products/flavors
+3. **CENTRALIZED IMAGE LOGIC**
+   - All image handling is centralized in `src/config/imageDisplay.ts`
+   - Product Detail: Shows product title when no image exists
+   - Cart View: Shows placeholder when no image exists
+   - Automatic for future products - no setup needed for new products/flavors
 
-### Placeholder Design
+### Placeholder Design (Cart Only)
 
 **Visual Specs:**
-- Square aspect ratio (200×200 for cart, 400×400 for product view)
+- Square aspect ratio (200×200 for cart)
 - Royal Blue background (#0047AB)
 - White geometric diamond icon (30% opacity)
 - Clean, minimal, brand-aligned
 - Inline SVG (no external files needed)
+
+### Missing Image Fallback (Product Detail)
+
+**Visual Specs:**
+- Centered, bold text (Bricolage Grotesque)
+- Shows product name and flavor name
+- Size: 3xl font
+- Color: White text at 60% opacity
+- No icon - just the product title
 
 ### Why This Matters
 
@@ -201,6 +211,7 @@ const getCartImage = (productId: string): string => {
 
 ## Related Files
 
+- `src/config/imageDisplay.ts` - Centralized image display logic and placeholders
 - `src/routes/ProductDetail.tsx` - Product detail view image mapping and display logic
 - `src/routes/Cart.tsx` - Cart view image mapping and display logic
 - `src/config/products.ts` - Product and flavor configuration

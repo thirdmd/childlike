@@ -4,6 +4,7 @@ import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { BrandButton } from "@/components/ui/BrandButton";
 import { homeConfig } from "@/config/home";
+import { interactiveHoverEffect } from "@/config/interactionStyles";
 import productImage from "@/assets/childlike 3d model.png";
 
 const Home = () => {
@@ -16,7 +17,7 @@ const Home = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-black/20 rounded-full blur-[120px]" />
 
         {/* Product container */}
-        <Link to="/products/chewy-protein-cookie" className="relative z-10 w-full max-w-2xl px-8 cursor-pointer group">
+        <Link to="/products/chewy-protein-cookie" className={`relative z-10 w-full max-w-2xl px-8 ${interactiveHoverEffect}`}>
           <div className="relative aspect-square animate-float">
             {/* Glow effect behind product */}
             <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
@@ -39,20 +40,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* Pillars Section */}
-      <Section className="bg-brand-blue py-16 md:py-24">
-        <Container size="xl">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {homeConfig.pillars.map((pillar) => (
-              <div key={pillar.id}>
-                <h3 className="text-h3 mb-2 text-brand-white">{pillar.title}</h3>
-                <p className="text-body text-brand-white/70">{pillar.description}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
 
       {/* Experience Section */}
       <Section className="bg-brand-blue py-16 md:py-24">

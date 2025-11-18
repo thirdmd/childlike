@@ -3,6 +3,8 @@ import { Page } from "@/components/layout/Page";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/config/currency";
 import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
+import { iconButtonHoverClass } from "@/config/interactionStyles";
+import { CART_PLACEHOLDER } from "@/config/imageDisplay";
 import { Trash2, ShoppingBag } from "lucide-react";
 import { calculateItemTotal } from "@/lib/pricingService";
 import { useToast } from "@/components/ui/use-toast";
@@ -42,16 +44,10 @@ const cartFlavorImages: Record<string, string> = {
 };
 
 /**
- * Centralized placeholder for products without images
- * Clean square design matching Childlike brand (Royal Blue + White)
- */
-const CART_PLACEHOLDER = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%230047AB'/%3E%3Cpath d='M100 60 L140 100 L100 140 L60 100 Z' fill='none' stroke='%23FFFFFF' stroke-width='3' opacity='0.3'/%3E%3C/svg%3E`;
-
-/**
  * Get cart image for a specific product/flavor combination
  * Uses productId which already contains product-slug-flavor-slug format
  * Returns flavor-specific image if exists, otherwise returns placeholder
- * ALL products now show images - either real or placeholder
+ * Centralized: Uses CART_PLACEHOLDER from imageDisplay config
  */
 const getCartImage = (productId: string): string => {
   return cartFlavorImages[productId] || CART_PLACEHOLDER;
@@ -107,7 +103,7 @@ const Cart = () => {
       <div className="container mx-auto px-4 py-8">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center text-brand-white/70 hover:text-brand-white transition-colors mb-6"
+          className={`inline-flex items-center text-brand-white/70 hover:text-brand-white mb-6 ${iconButtonHoverClass}`}
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

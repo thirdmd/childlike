@@ -7,6 +7,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { arrowButtonClassName, isProductValid } from "@/config/navigationRules";
 import { formatPrice } from "@/config/currency";
 import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
+import { iconButtonHoverClass } from "@/config/interactionStyles";
+import { hasProductImage, getMissingImageFallback } from "@/config/imageDisplay";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -46,21 +48,18 @@ const productFlavorImages: Record<string, string> = {
 };
 
 /**
- * Centralized placeholder for products without images
- * Clean square design matching Childlike brand (Royal Blue + White)
- */
-const PRODUCT_PLACEHOLDER = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%230047AB'/%3E%3Cpath d='M200 120 L280 200 L200 280 L120 200 Z' fill='none' stroke='%23FFFFFF' stroke-width='4' opacity='0.3'/%3E%3C/svg%3E`;
-
-/**
  * Get product image based on product and flavor
- * Returns flavor-specific image if exists, otherwise returns placeholder
- * ALL products now show images - either real or placeholder
+ * Returns flavor-specific image if exists, otherwise returns undefined
+ * Centralized: Uses imageDisplay config for fallback logic
  */
-const getProductImage = (productSlug: string, flavorSlug?: string): string => {
-  if (!flavorSlug) return PRODUCT_PLACEHOLDER;
+const getProductImage = (
+  productSlug: string,
+  flavorSlug?: string
+): string | undefined => {
+  if (!flavorSlug) return undefined;
 
   const key = `${productSlug}-${flavorSlug}`;
-  return productFlavorImages[key] || PRODUCT_PLACEHOLDER;
+  return productFlavorImages[key]; // Returns undefined if not in mapping
 };
 
 const ProductDetail = () => {
@@ -222,7 +221,7 @@ const ProductDetail = () => {
       <div className="container mx-auto px-4 py-0">
         <Link
           to="/"
-          className="inline-flex items-center justify-center w-8 h-8 text-brand-white/70 hover:text-brand-white transition-colors"
+          className={`inline-flex items-center justify-center w-8 h-8 text-brand-white/70 hover:text-brand-white ${iconButtonHoverClass}`}
           title="Back to home"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,13 +266,21 @@ const ProductDetail = () => {
               {/* Glow effect */}
               <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
 
-              {/* Product Image - Always show (real image or placeholder) */}
+              {/* Product Image - Show image or product title if no image available */}
               <div className="relative w-full h-full flex items-center justify-center">
-                <img
-                  src={productImageSrc}
-                  alt={currentFlavor ? `${product.name} - ${currentFlavor.name}` : product.name}
-                  className="w-[85%] h-[85%] object-contain drop-shadow-2xl animate-float"
-                />
+                {productImageSrc ? (
+                  <img
+                    src={productImageSrc}
+                    alt={currentFlavor ? `${product.name} - ${currentFlavor.name}` : product.name}
+                    className="w-[85%] h-[85%] object-contain drop-shadow-2xl animate-float"
+                  />
+                ) : (
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-brand-white/60">
+                      {getMissingImageFallback(product.name, currentFlavor?.name)}
+                    </h2>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -362,7 +369,7 @@ const ProductDetail = () => {
               <div className="flex items-center gap-3 bg-brand-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
                 <button
                   onClick={() => setQuantity(Math.max(0, quantity - 1))}
-                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white"
+                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 flex items-center justify-center text-brand-white"
                   aria-label="Decrease quantity"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -373,7 +380,7 @@ const ProductDetail = () => {
                 <button
                   onClick={() => setQuantity(Math.min(99, quantity + 1))}
                   disabled={quantity >= 99}
-                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 transition-colors flex items-center justify-center text-brand-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 flex items-center justify-center text-brand-white disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Increase quantity"
                   title={quantity >= 99 ? "Maximum quantity reached" : "Increase quantity"}
                 >

@@ -90,11 +90,11 @@ const Contact = () => {
   };
 
   return (
-    <Page>
-      <Section>
+    <Page className="bg-brand-blue">
+      <Section className="bg-brand-blue">
         <Container>
-          <h1 className="text-h1">Contact Page Placeholder</h1>
-          <p className="mt-4 text-body text-foreground/70">
+          <h1 className="text-h1 text-brand-white">Contact Page Placeholder</h1>
+          <p className="mt-4 text-body text-brand-white/70">
             Contact form and waitlist will be displayed here.
           </p>
 
@@ -135,8 +135,8 @@ const Contact = () => {
           </form>
 
           <div className="mt-12">
-            <h2 className="text-h2">Join the waitlist</h2>
-            <p className="mt-2 text-body text-foreground/70">
+            <h2 className="text-h2 text-brand-white">Join the waitlist</h2>
+            <p className="mt-2 text-body text-brand-white/70">
               Be the first to know when we launch.
             </p>
 

@@ -43,13 +43,13 @@ const Home = () => {
       </section>
 
       {/* Pillars Section */}
-      <Section className="bg-background">
+      <Section className="bg-brand-blue">
         <Container size="xl">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {homeConfig.pillars.map((pillar) => (
               <div key={pillar.id}>
-                <h3 className="text-h3 mb-2">{pillar.title}</h3>
-                <p className="text-body text-foreground/70">{pillar.description}</p>
+                <h3 className="text-h3 mb-2 text-brand-white">{pillar.title}</h3>
+                <p className="text-body text-brand-white/70">{pillar.description}</p>
               </div>
             ))}
           </div>
@@ -57,7 +57,7 @@ const Home = () => {
       </Section>
 
       {/* Experience Section */}
-      <Section className="bg-brand-black/5">
+      <Section className="bg-brand-blue">
         <Container size="md" className="text-center">
           <h2 className="text-h1 mb-6 text-brand-white">{homeConfig.experienceSection.heading}</h2>
           <p className="text-body text-brand-white leading-relaxed">{homeConfig.experienceSection.description}</p>

@@ -11,7 +11,6 @@ import { useCart } from "@/context/CartContext";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { calculateItemTotal, logAnalyticsEvent, createAnalyticsEvent } from "@/lib/pricingService";
-import defaultProductImage from "@/assets/productview_cookie_chocochip.png";
 
 /**
  * CENTRALIZED PRODUCT IMAGE NAMING CONVENTION
@@ -21,9 +20,14 @@ import defaultProductImage from "@/assets/productview_cookie_chocochip.png";
  * - productview_cookie_chocochip.png → Chewy Protein Cookie - Chocolate Chip
  * - productview_cookie_peanutbutter.png → Chewy Protein Cookie - Peanut Butter
  * - productview_cookie_pistachio.png → Chewy Protein Cookie - Pistachio Biskit
+ *
+ * IMAGE STRATEGY:
+ * - Flavors WITH uploaded images → Show flavor-specific image
+ * - Flavors WITHOUT uploaded images → Show NOTHING (blank/no image)
+ * - NO FALLBACK - each flavor only shows its own image or nothing
  */
 
-// Import product images following naming convention
+// Import flavor-specific product images following naming convention
 import productview_cookie_chocochip from "@/assets/productview_cookie_chocochip.png";
 // Future imports (add as images become available):
 // import productview_cookie_peanutbutter from "@/assets/productview_cookie_peanutbutter.png";
@@ -32,6 +36,7 @@ import productview_cookie_chocochip from "@/assets/productview_cookie_chocochip.
 /**
  * Centralized mapping: product-slug + flavor-slug → image
  * Key format matches the unique productId format used in cart system
+ * ONLY mapped flavors will show images - others show nothing
  */
 const productFlavorImages: Record<string, string> = {
   "chewy-protein-cookie-chocolate-chip": productview_cookie_chocochip,
@@ -41,14 +46,21 @@ const productFlavorImages: Record<string, string> = {
 };
 
 /**
+ * Centralized placeholder for products without images
+ * Clean square design matching Childlike brand (Royal Blue + White)
+ */
+const PRODUCT_PLACEHOLDER = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%230047AB'/%3E%3Cpath d='M200 120 L280 200 L200 280 L120 200 Z' fill='none' stroke='%23FFFFFF' stroke-width='4' opacity='0.3'/%3E%3C/svg%3E`;
+
+/**
  * Get product image based on product and flavor
- * Falls back to default if no specific image exists
+ * Returns flavor-specific image if exists, otherwise returns placeholder
+ * ALL products now show images - either real or placeholder
  */
 const getProductImage = (productSlug: string, flavorSlug?: string): string => {
-  if (!flavorSlug) return defaultProductImage;
+  if (!flavorSlug) return PRODUCT_PLACEHOLDER;
 
   const key = `${productSlug}-${flavorSlug}`;
-  return productFlavorImages[key] || defaultProductImage;
+  return productFlavorImages[key] || PRODUCT_PLACEHOLDER;
 };
 
 const ProductDetail = () => {
@@ -255,7 +267,7 @@ const ProductDetail = () => {
               {/* Glow effect */}
               <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
 
-              {/* Product Image */}
+              {/* Product Image - Always show (real image or placeholder) */}
               <div className="relative w-full h-full flex items-center justify-center">
                 <img
                   src={productImageSrc}

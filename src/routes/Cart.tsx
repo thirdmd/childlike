@@ -16,11 +16,15 @@ import { ToastAction } from "@/components/ui/toast";
  * - cartview_cookie_chocochip.png → Chewy Protein Cookie - Chocolate Chip
  * - cartview_cookie_peanutbutter.png → Chewy Protein Cookie - Peanut Butter
  * - cartview_cookie_pistachio.png → Chewy Protein Cookie - Pistachio Biskit
+ *
+ * IMAGE STRATEGY:
+ * - Flavors WITH uploaded images → Show flavor-specific image
+ * - Flavors WITHOUT uploaded images → Show NOTHING (blank/no image)
+ * - NO FALLBACK - each flavor only shows its own image or nothing
  */
 
-// Import cart images following naming convention
+// Import flavor-specific cart images following naming convention
 import cartview_cookie_chocochip from "@/assets/cartview_cookie_chocochip.png";
-import defaultCartImage from "@/assets/cartview_cookie_chocochip.png"; // Fallback image
 // Future imports (add as images become available):
 // import cartview_cookie_peanutbutter from "@/assets/cartview_cookie_peanutbutter.png";
 // import cartview_cookie_pistachio from "@/assets/cartview_cookie_pistachio.png";
@@ -28,6 +32,7 @@ import defaultCartImage from "@/assets/cartview_cookie_chocochip.png"; // Fallba
 /**
  * Centralized mapping: productId (product-slug-flavor-slug) → cart image
  * Key format matches the unique productId format used in cart system
+ * ONLY mapped flavors will show images - others show nothing
  */
 const cartFlavorImages: Record<string, string> = {
   "chewy-protein-cookie-chocolate-chip": cartview_cookie_chocochip,
@@ -37,11 +42,19 @@ const cartFlavorImages: Record<string, string> = {
 };
 
 /**
+ * Centralized placeholder for products without images
+ * Clean square design matching Childlike brand (Royal Blue + White)
+ */
+const CART_PLACEHOLDER = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%230047AB'/%3E%3Cpath d='M100 60 L140 100 L100 140 L60 100 Z' fill='none' stroke='%23FFFFFF' stroke-width='3' opacity='0.3'/%3E%3C/svg%3E`;
+
+/**
  * Get cart image for a specific product/flavor combination
  * Uses productId which already contains product-slug-flavor-slug format
+ * Returns flavor-specific image if exists, otherwise returns placeholder
+ * ALL products now show images - either real or placeholder
  */
 const getCartImage = (productId: string): string => {
-  return cartFlavorImages[productId] || defaultCartImage;
+  return cartFlavorImages[productId] || CART_PLACEHOLDER;
 };
 
 const Cart = () => {
@@ -114,7 +127,7 @@ const Cart = () => {
                 key={item.productId}
                 className="bg-brand-white/10 backdrop-blur-sm border border-brand-white/20 rounded-2xl p-6 flex items-center gap-6"
               >
-                {/* Product Image */}
+                {/* Product Image - Always show (real image or placeholder) */}
                 <img
                   src={getCartImage(item.productId)}
                   alt={item.flavorName ? `${item.name} - ${item.flavorName}` : item.name}

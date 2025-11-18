@@ -91,14 +91,16 @@ The images will automatically display in both views when users interact with tha
 ## System Architecture
 
 ### Product Detail View - Image Resolution
-Location: `src/routes/ProductDetail.tsx:47-52`
+Location: `src/routes/ProductDetail.tsx`
 
 ```typescript
+const PRODUCT_PLACEHOLDER = `data:image/svg+xml,%3Csvg...%3E`; // Royal Blue square placeholder
+
 const getProductImage = (productSlug: string, flavorSlug?: string): string => {
-  if (!flavorSlug) return defaultProductImage;
+  if (!flavorSlug) return PRODUCT_PLACEHOLDER;
 
   const key = `${productSlug}-${flavorSlug}`;
-  return productFlavorImages[key] || defaultProductImage;
+  return productFlavorImages[key] || PRODUCT_PLACEHOLDER;
 };
 ```
 
@@ -107,12 +109,16 @@ const getProductImage = (productSlug: string, flavorSlug?: string): string => {
 const productImageSrc = getProductImage(product?.slug, currentFlavor?.slug);
 ```
 
+**Behavior:** Returns flavor-specific image if exists, otherwise returns placeholder. ALL products show images.
+
 ### Cart View - Image Resolution
-Location: `src/routes/Cart.tsx:43-45`
+Location: `src/routes/Cart.tsx`
 
 ```typescript
+const CART_PLACEHOLDER = `data:image/svg+xml,%3Csvg...%3E`; // Royal Blue square placeholder
+
 const getCartImage = (productId: string): string => {
-  return cartFlavorImages[productId] || defaultCartImage;
+  return cartFlavorImages[productId] || CART_PLACEHOLDER;
 };
 ```
 
@@ -121,7 +127,50 @@ const getCartImage = (productId: string): string => {
 <img src={getCartImage(item.productId)} alt={...} />
 ```
 
+**Behavior:** Returns flavor-specific image if exists, otherwise returns placeholder. ALL products show images.
+
 **Key Difference:** Cart uses `productId` (already in `product-slug-flavor-slug` format), ProductDetail builds it from separate slugs.
+
+## Image Display Strategy
+
+**IMPORTANT:** Each flavor should only show its own image. Products without images show elegant placeholders.
+
+### How Images Work
+
+1. **Flavor WITH uploaded image** → Shows flavor-specific image
+   - Example: Chocolate Chip shows `productview_cookie_chocochip.png`
+
+2. **Flavor WITHOUT uploaded image** → Shows PLACEHOLDER
+   - Example: Peanut Butter shows clean square placeholder (until real image is uploaded)
+   - Example: Pistachio Biskit shows clean square placeholder (until real image is uploaded)
+
+3. **CENTRALIZED PLACEHOLDER SYSTEM**
+   - All products without images show elegant square placeholders
+   - Royal Blue (#0047AB) background with white geometric icon
+   - Consistent brand experience across all products
+   - Automatic - no setup needed for new products/flavors
+
+### Placeholder Design
+
+**Visual Specs:**
+- Square aspect ratio (200×200 for cart, 400×400 for product view)
+- Royal Blue background (#0047AB)
+- White geometric diamond icon (30% opacity)
+- Clean, minimal, brand-aligned
+- Inline SVG (no external files needed)
+
+### Why This Matters
+
+❌ **WRONG:** Peanut Butter showing Chocolate Chip image
+- Confuses customers
+- Shows incorrect product representation
+- Could lead to wrong orders
+
+✅ **CORRECT:** Peanut Butter showing PLACEHOLDER
+- Clear visual presence (not blank)
+- No misleading flavor information
+- Professional appearance
+- Matches Childlike brand identity
 
 ## Benefits of This Convention
 
@@ -129,8 +178,10 @@ const getCartImage = (productId: string): string => {
 2. **Centralized Management** - All images mapped in one place
 3. **Type Safety** - TypeScript ensures correct imports
 4. **Scalable** - Easy to add new products and flavors
-5. **Fallback Support** - Shows default image if specific image not found
+5. **Smart Placeholders** - Elegant fallback for products without images
 6. **Production Ready** - Vite properly bundles and optimizes images
+7. **Professional Look** - All products have visual presence (real image or placeholder)
+8. **Zero Setup** - New products automatically get placeholders until images are uploaded
 
 ## Current Status
 
@@ -160,6 +211,11 @@ const getCartImage = (productId: string): string => {
 
 - **DO NOT** use random or inconsistent naming
 - **DO NOT** hardcode image paths outside of the central mapping
-- **ALWAYS** follow the `productview_(product)_(flavor).png` format
+- **DO NOT** use another flavor's image as fallback
+- **ALWAYS** follow the `productview_(product)_(flavor).png` and `cartview_(product)_(flavor).png` formats
 - **ALWAYS** import images statically (no dynamic string paths)
 - Images must be imported at build time for Vite to process them correctly
+- Only add flavor-specific images to the mapping when you have BOTH productview and cartview versions uploaded
+- Products without images automatically show placeholders - clean, professional, brand-aligned
+- Placeholders are inline SVGs - no external files needed
+- New products/flavors require ZERO placeholder setup - system handles it automatically

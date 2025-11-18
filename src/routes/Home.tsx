@@ -10,9 +10,7 @@ const Home = () => {
   return (
     <Page className="bg-brand-blue overflow-hidden">
       {/* Hero - Full Viewport */}
-      <section className="relative min-h-screen flex items-center justify-center">
-        {/* Subtle gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-blue via-brand-blue to-[hsl(216,100%,30%)]" />
+      <section className="relative min-h-screen flex items-center justify-center bg-brand-blue">
 
         {/* Floating shadow behind product for depth */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-black/20 rounded-full blur-[120px]" />
@@ -43,7 +41,7 @@ const Home = () => {
       </section>
 
       {/* Pillars Section */}
-      <Section className="bg-brand-blue">
+      <Section className="bg-brand-blue py-16 md:py-24">
         <Container size="xl">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {homeConfig.pillars.map((pillar) => (
@@ -57,7 +55,7 @@ const Home = () => {
       </Section>
 
       {/* Experience Section */}
-      <Section className="bg-brand-blue">
+      <Section className="bg-brand-blue py-16 md:py-24">
         <Container size="md" className="text-center">
           <h2 className="text-h1 mb-6 text-brand-white">{homeConfig.experienceSection.heading}</h2>
           <p className="text-body text-brand-white leading-relaxed">{homeConfig.experienceSection.description}</p>

@@ -12,5 +12,5 @@ export const siteConfig = {
     { label: "Privacy", path: "/privacy" },
     { label: "Terms", path: "/terms" },
   ],
-  footerCopy: "© 2024 Childlike. Playful Nutrition — Engineered for Humans.",
+  footerCopy: "© 2026 Childlike. Playful Nutrition — Stay Wild Inside.",
 };

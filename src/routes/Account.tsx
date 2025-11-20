@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Avatar } from "@/components/Avatar";
-import { Mail, Lock, AlertCircle, Camera, Upload } from "lucide-react";
+import { ImageCropModal } from "@/components/ImageCropModal";
+import { Mail, Lock, AlertCircle, Camera } from "lucide-react";
 
 export default function Account() {
   const { user, profile, loading, refreshProfile } = useCurrentUser();
@@ -22,7 +23,8 @@ export default function Account() {
   // Profile picture upload state
   const [profilePictureLoading, setProfilePictureLoading] = useState(false);
   const [profilePictureError, setProfilePictureError] = useState("");
-  const [dragActive, setDragActive] = useState(false);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // Password change state
   const [oldPassword, setOldPassword] = useState("");
@@ -64,16 +66,33 @@ export default function Account() {
     setNicknameLoading(false);
   };
 
-  // Handle profile picture upload
-  const handleProfilePictureUpload = async (file: File) => {
-    setProfilePictureError("");
+  // Handle file selection - show crop modal
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    if (!file) {
-      setProfilePictureError("No file selected");
+    if (!file.type.startsWith("image/")) {
+      setProfilePictureError("Please select an image file");
       return;
     }
 
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSelectedImage(reader.result as string);
+      setShowCropModal(true);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  // Handle cropped image upload
+  const handleCroppedImage = async (croppedBlob: Blob) => {
+    setShowCropModal(false);
+    setSelectedImage(null);
     setProfilePictureLoading(true);
+    setProfilePictureError("");
+
+    const file = new File([croppedBlob], "profile.jpg", { type: "image/jpeg" });
     const result = await authService.uploadProfilePicture(user!.id, file);
 
     if (result.success) {
@@ -81,43 +100,14 @@ export default function Account() {
         title: "Profile picture updated",
         description: "Your profile picture has been uploaded.",
       });
-      // Refresh profile data to show new picture
       await refreshProfile();
+      console.log("Profile refreshed after upload");
     } else {
       setProfilePictureError(result.error || "Failed to upload picture");
+      console.error("Upload failed:", result.error);
     }
 
     setProfilePictureLoading(false);
-  };
-
-  // Handle file input
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleProfilePictureUpload(file);
-    }
-  };
-
-  // Handle drag and drop
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      handleProfilePictureUpload(file);
-    }
   };
 
   // Step 1: Verify old password
@@ -241,16 +231,10 @@ export default function Account() {
                   id="profile-picture-input"
                 />
 
-                {/* Drag and drop overlay for photo upload */}
+                {/* Click overlay for photo upload */}
                 <label
                   htmlFor="profile-picture-input"
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={handleDrop}
-                  className={`absolute inset-0 rounded-full cursor-pointer transition-colors flex items-end justify-end ${
-                    dragActive ? "bg-brand-white/20" : "hover:bg-brand-white/10"
-                  }`}
+                  className="absolute inset-0 rounded-full cursor-pointer transition-colors flex items-end justify-end hover:bg-brand-white/10"
                   title="Upload profile picture"
                 >
                   <div className="bg-brand-blue border-2 border-brand-white/30 rounded-full p-2 group-hover:bg-brand-white/20 transition-colors pointer-events-none">
@@ -461,6 +445,18 @@ export default function Account() {
           </Button>
         </div>
       </div>
+
+      {/* Image Crop Modal */}
+      {showCropModal && selectedImage && (
+        <ImageCropModal
+          image={selectedImage}
+          onCropComplete={handleCroppedImage}
+          onCancel={() => {
+            setShowCropModal(false);
+            setSelectedImage(null);
+          }}
+        />
+      )}
     </div>
   );
 }

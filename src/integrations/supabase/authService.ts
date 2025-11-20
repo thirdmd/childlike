@@ -174,12 +174,15 @@ export const authService = {
       const {
         data: { publicUrl },
       } = supabase.storage.from("user_profiles").getPublicUrl(filePath);
+      console.log("Got public URL:", publicUrl);
 
       // Update profile with picture URL
       const { error: updateError } = await supabase
         .from("user_profiles")
         .update({ profile_picture_url: publicUrl })
         .eq("user_id", userId);
+
+      console.log("Database update:", updateError ? "ERROR: " + updateError.message : "SUCCESS");
 
       if (updateError) {
         return { success: false, error: updateError.message };

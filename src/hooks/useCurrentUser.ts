@@ -39,7 +39,7 @@ export function useCurrentUser(): UseCurrentUserResult {
 
       if (profileError && profileError.code !== "PGRST116") {
         setError(profileError.message);
-      } else {
+      } else if (data) {
         setProfile(data);
       }
     } catch (err) {

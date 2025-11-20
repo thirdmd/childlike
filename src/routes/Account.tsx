@@ -87,27 +87,40 @@ export default function Account() {
 
   // Handle cropped image upload
   const handleCroppedImage = async (croppedBlob: Blob) => {
+    console.log("=== ACCOUNT: Starting upload ===");
+    console.log("Cropped blob size:", `${(croppedBlob.size / 1024).toFixed(2)}KB`);
+
     setShowCropModal(false);
     setSelectedImage(null);
     setProfilePictureLoading(true);
     setProfilePictureError("");
 
     const file = new File([croppedBlob], "profile.jpg", { type: "image/jpeg" });
+    console.log("Created file:", file.name, file.type);
+    console.log("User ID:", user!.id);
+
     const result = await authService.uploadProfilePicture(user!.id, file);
+    console.log("Upload result:", result);
 
     if (result.success) {
+      console.log("Upload succeeded, showing toast");
       toast({
         title: "Profile picture updated",
         description: "Your profile picture has been uploaded.",
       });
+
+      console.log("Calling refreshProfile...");
       await refreshProfile();
-      console.log("Profile refreshed after upload");
+      console.log("RefreshProfile completed");
+
+      console.log("Current profile state:", profile);
     } else {
-      setProfilePictureError(result.error || "Failed to upload picture");
       console.error("Upload failed:", result.error);
+      setProfilePictureError(result.error || "Failed to upload picture");
     }
 
     setProfilePictureLoading(false);
+    console.log("=== ACCOUNT: Upload flow complete ===");
   };
 
   // Step 1: Verify old password

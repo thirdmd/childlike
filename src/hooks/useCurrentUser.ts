@@ -28,7 +28,13 @@ export function useCurrentUser(): UseCurrentUserResult {
   const [error, setError] = useState<string | null>(null);
 
   const refreshProfile = async () => {
-    if (!user) return;
+    console.log("=== REFRESH PROFILE START ===");
+    if (!user) {
+      console.log("No user, skipping refresh");
+      return;
+    }
+
+    console.log("Fetching profile for user:", user.id);
 
     try {
       const { data, error: profileError } = await supabase
@@ -37,14 +43,22 @@ export function useCurrentUser(): UseCurrentUserResult {
         .eq("user_id", user.id)
         .single();
 
+      console.log("Profile fetch result:", { data, profileError });
+
       if (profileError && profileError.code !== "PGRST116") {
+        console.error("Profile fetch error:", profileError);
         setError(profileError.message);
       } else if (data) {
+        console.log("Setting profile:", data);
         setProfile(data);
+        console.log("Profile state updated");
       }
     } catch (err) {
+      console.error("Unexpected error in refreshProfile:", err);
       setError(String(err));
     }
+
+    console.log("=== REFRESH PROFILE END ===");
   };
 
   useEffect(() => {
@@ -82,6 +96,7 @@ export function useCurrentUser(): UseCurrentUserResult {
           setProfile(data);
         }
 
+        console.log("Setting up real-time subscription for user:", session.user.id);
         profileSubscription = supabase
           .channel(`user_profile_${session.user.id}`)
           .on(
@@ -93,10 +108,14 @@ export function useCurrentUser(): UseCurrentUserResult {
               filter: `user_id=eq.${session.user.id}`,
             },
             (payload) => {
+              console.log("=== REAL-TIME UPDATE RECEIVED ===");
+              console.log("New profile data:", payload.new);
               setProfile(payload.new as CurrentUserProfile);
             }
           )
-          .subscribe();
+          .subscribe((status) => {
+            console.log("Real-time subscription status:", status);
+          });
       } catch (err) {
         setError(String(err));
       } finally {

@@ -85,11 +85,9 @@ export const authService = {
     currentPassword: string
   ): Promise<AuthResult> {
     try {
-      // Try to sign in with current credentials
-      // If successful, password is correct
       const { error } = await supabase.auth.signInWithPassword({
         email,
-        currentPassword,
+        password: currentPassword,
       });
 
       if (error) {
@@ -163,7 +161,7 @@ export const authService = {
 
       // Upload to Supabase storage
       const { error: uploadError } = await supabase.storage
-        .from("user-profiles")
+        .from("user_profiles")
         .upload(filePath, file, {
           upsert: true,
         });
@@ -175,7 +173,7 @@ export const authService = {
       // Get public URL
       const {
         data: { publicUrl },
-      } = supabase.storage.from("user-profiles").getPublicUrl(filePath);
+      } = supabase.storage.from("user_profiles").getPublicUrl(filePath);
 
       // Update profile with picture URL
       const { error: updateError } = await supabase

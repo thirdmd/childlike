@@ -48,6 +48,8 @@ export function useCurrentUser(): UseCurrentUserResult {
   };
 
   useEffect(() => {
+    let profileSubscription: ReturnType<typeof supabase.channel> | null = null;
+
     const loadUser = async () => {
       try {
         const { session, error: sessionError } =
@@ -79,6 +81,22 @@ export function useCurrentUser(): UseCurrentUserResult {
         } else {
           setProfile(data);
         }
+
+        profileSubscription = supabase
+          .channel(`user_profile_${session.user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "UPDATE",
+              schema: "public",
+              table: "user_profiles",
+              filter: `user_id=eq.${session.user.id}`,
+            },
+            (payload) => {
+              setProfile(payload.new as CurrentUserProfile);
+            }
+          )
+          .subscribe();
       } catch (err) {
         setError(String(err));
       } finally {
@@ -103,34 +121,11 @@ export function useCurrentUser(): UseCurrentUserResult {
       }
     });
 
-    // Set up real-time subscription for profile changes
-    let profileSubscription: ReturnType<typeof supabase.channel> | null = null;
-
-    if (user?.id) {
-      profileSubscription = supabase
-        .channel(`user_profile_${user.id}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "UPDATE",
-            schema: "public",
-            table: "user_profiles",
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            setProfile(payload.new as CurrentUserProfile);
-          }
-        )
-        .subscribe();
-    }
-
     return () => {
       authListener?.subscription.unsubscribe();
-      if (profileSubscription) {
-        profileSubscription.unsubscribe();
-      }
+      profileSubscription?.unsubscribe();
     };
-  }, [user?.id]);
+  }, []);
 
   return { user, profile, loading, error, refreshProfile };
 }

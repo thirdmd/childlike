@@ -18,13 +18,13 @@ Run the SQL in `SQL_PROFILE_PICTURE_SETUP.sql` in your Supabase SQL Editor:
 
 ### 2. Create Storage Bucket for Profile Pictures
 
-You need to create a `user-profiles` storage bucket for picture uploads.
+You need to create a `user_profiles` storage bucket for picture uploads.
 
 **Steps:**
 1. Go to Supabase Dashboard → Your Project
 2. Click "Storage" in left sidebar
 3. Click "Create a new bucket"
-4. Name: `user-profiles`
+4. Name: `user_profiles`
 5. Check "Private" (important for security)
 6. Click "Create bucket"
 7. Click on the bucket, then "Policies" tab
@@ -35,15 +35,15 @@ You need to create a `user-profiles` storage bucket for picture uploads.
 ```sql
 create policy "Users can upload own profile picture"
   on storage.objects for insert
-  with check (bucket_id = 'user-profiles' and auth.uid() = (storage.foldername(name))[1]::uuid);
+  with check (bucket_id = 'user_profiles' and auth.uid() = (storage.foldername(name))[1]::uuid);
 
 create policy "Users can read own profile picture"
   on storage.objects for select
-  using (bucket_id = 'user-profiles' and auth.uid() = (storage.foldername(name))[1]::uuid);
+  using (bucket_id = 'user_profiles' and auth.uid() = (storage.foldername(name))[1]::uuid);
 
 create policy "Authenticated users can see all profile pictures"
   on storage.objects for select
-  using (bucket_id = 'user-profiles');
+  using (bucket_id = 'user_profiles');
 ```
 
 ### 3. Cart Persistence Setup (SQL)
@@ -119,7 +119,7 @@ Run the SQL in `SQL_USER_CARTS.sql` in your Supabase SQL Editor:
 ## Troubleshooting
 
 **Profile picture not uploading:**
-- Check that `user-profiles` storage bucket exists
+- Check that `user_profiles` storage bucket exists
 - Check storage policies are correctly set
 - Check browser console for errors
 - Verify file is under 5MB and is an image
@@ -139,4 +139,4 @@ Run the SQL in `SQL_USER_CARTS.sql` in your Supabase SQL Editor:
 **File upload fails with permission error:**
 - Check storage bucket policies are set correctly
 - Verify user is authenticated
-- Check bucket name is exactly `user-profiles`
+- Check bucket name is exactly `user_profiles`

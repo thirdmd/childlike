@@ -2,15 +2,18 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { siteConfig } from "@/config/site";
 import { iconButtonHoverClass } from "@/config/interactionStyles";
-import { User, ShoppingBag } from "lucide-react";
+import { ShoppingBag, User } from "lucide-react";
 import childlikeLogo from "@/assets/childlike-logo.png";
 import { useCart } from "@/context/CartContext";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Avatar } from "@/components/Avatar";
 
 export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { itemCount } = useCart();
+  const { user, profile } = useCurrentUser();
   const displayCount = itemCount > 9 ? "9+" : itemCount.toString();
 
   /**
@@ -64,8 +67,16 @@ export const Header = () => {
           {/* Right side - User & Cart icons + Mobile Toggle */}
           <div className="flex items-center justify-end gap-3 ml-auto">
             <div className="hidden lg:flex items-center gap-3">
-              <button className={`w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 ${iconButtonHoverClass}`}>
-                <User className="w-5 h-5 text-brand-white" />
+              <button
+                onClick={() => navigate(user ? "/account" : "/auth/login")}
+                className={`w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 ${iconButtonHoverClass}`}
+                aria-label={user ? "Go to account" : "Sign in"}
+              >
+                {user && user.id ? (
+                  <Avatar userId={user.id} fullName={profile?.full_name} email={user.email} size="sm" profilePictureUrl={profile?.profile_picture_url} />
+                ) : (
+                  <User className="w-5 h-5 text-brand-white" />
+                )}
               </button>
               <button
                 onClick={() => navigate("/cart")}
@@ -116,9 +127,24 @@ export const Header = () => {
 
             {/* Mobile user actions */}
             <div className="flex gap-2 pt-4">
-              <button className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 flex items-center justify-center gap-2">
-                <User className="w-4 h-4" />
-                Account
+              <button
+                onClick={() => {
+                  navigate(user ? "/account" : "/auth/login");
+                  setMobileMenuOpen(false);
+                }}
+                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 flex items-center justify-center gap-2"
+              >
+                {user && user.id ? (
+                  <>
+                    <Avatar userId={user.id} fullName={profile?.full_name} email={user.email} size="sm" profilePictureUrl={profile?.profile_picture_url} />
+                    Account
+                  </>
+                ) : (
+                  <>
+                    <User className="w-4 h-4" />
+                    Sign In
+                  </>
+                )}
               </button>
               <button
                 onClick={() => {

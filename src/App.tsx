@@ -12,6 +12,9 @@ import Cart from "./routes/Cart";
 import About from "./routes/About";
 import FAQ from "./routes/FAQ";
 import Contact from "./routes/Contact";
+import Login from "./routes/Login";
+import Register from "./routes/Register";
+import Account from "./routes/Account";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +34,9 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/register" element={<Register />} />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />

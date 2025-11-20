@@ -5,6 +5,7 @@ import { formatPrice } from "@/config/currency";
 import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
 import { iconButtonHoverClass } from "@/config/interactionStyles";
 import { CART_PLACEHOLDER } from "@/config/imageDisplay";
+import { getPaymentLinkForProduct } from "@/config/checkout";
 import { Trash2, ShoppingBag } from "lucide-react";
 import { calculateItemTotal } from "@/lib/pricingService";
 import { useToast } from "@/components/ui/use-toast";
@@ -73,6 +74,36 @@ const Cart = () => {
         </ToastAction>
       ),
     });
+  };
+
+  // Handle checkout - redirect to Stripe Payment Link
+  const handleCheckout = () => {
+    // For MVP: assume single product type, get first item
+    const primaryItem = state.items[0];
+
+    if (!primaryItem) {
+      toast({
+        title: "Cart is empty",
+        description: "Please add items to your cart before checking out.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Get payment link for this product
+    const paymentLink = getPaymentLinkForProduct(primaryItem.productId);
+
+    if (!paymentLink) {
+      toast({
+        title: "Checkout not available",
+        description: "Checkout is not configured yet. Please try again later.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Redirect to Stripe Payment Link
+    window.location.href = paymentLink;
   };
 
   if (itemCount === 0) {
@@ -213,7 +244,10 @@ const Cart = () => {
                 </div>
               </div>
 
-              <button className={`w-full ${ctaPrimaryButtonClassName} justify-center`}>
+              <button
+                onClick={handleCheckout}
+                className={`w-full ${ctaPrimaryButtonClassName} justify-center`}
+              >
                 Proceed to Checkout
               </button>
 

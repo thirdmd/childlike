@@ -161,10 +161,10 @@ export const authService = {
         return { success: false, error: "File must be less than 5MB" };
       }
 
-      // Create unique filename
+      // Create unique filename with userId as folder
       const fileExt = file.name.split(".").pop();
-      const fileName = `${userId}-${Date.now()}.${fileExt}`;
-      const filePath = `profile-pictures/${fileName}`;
+      const fileName = `profile-${Date.now()}.${fileExt}`;
+      const filePath = `${userId}/${fileName}`;
       console.log("Upload path:", filePath);
 
       // Upload to Supabase storage

@@ -9,6 +9,7 @@ import { formatPrice } from "@/config/currency";
 import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
 import { iconButtonHoverClass } from "@/config/interactionStyles";
 import { hasProductImage, getMissingImageFallback } from "@/config/imageDisplay";
+import { isDecreaseDisabled, isIncreaseDisabled, decreaseQuantity, increaseQuantity } from "@/config/quantityRules";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -69,7 +70,7 @@ const ProductDetail = () => {
   const { toast } = useToast();
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentFlavorIndex, setCurrentFlavorIndex] = useState(0);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   // Find initial product index
   useEffect(() => {
@@ -88,11 +89,11 @@ const ProductDetail = () => {
   // Get flavor-specific image using centralized naming convention
   const productImageSrc = getProductImage(product?.slug, currentFlavor?.slug);
 
-  // PRODUCTION-READY: Reset counter to 0 whenever product changes
+  // PRODUCTION-READY: Reset counter to 1 whenever product changes
   // Counter is INDEPENDENT from cart - they are NOT connected
   // This ensures clean UX and proper separation of concerns for backend integration
   useEffect(() => {
-    setQuantity(0);
+    setQuantity(1);
   }, [product]);
 
   const handlePrevious = () => {
@@ -131,7 +132,7 @@ const ProductDetail = () => {
   };
 
   const buyNowHandler = () => {
-    if (!product || quantity === 0) return;
+    if (!product) return;
 
     // Security: Validate inputs before processing
     if (!product.id && !product.slug) {
@@ -180,8 +181,8 @@ const ProductDetail = () => {
     const analyticsEvent = createAnalyticsEvent("add_to_cart", product, quantity);
     logAnalyticsEvent(analyticsEvent);
 
-    // Reset quantity to 0 IMMEDIATELY after adding
-    setQuantity(0);
+    // Reset quantity to 1 IMMEDIATELY after adding
+    setQuantity(1);
 
     // Show success notification with action
     toast({
@@ -368,8 +369,9 @@ const ProductDetail = () => {
               {/* Quantity controls */}
               <div className="flex items-center gap-3 bg-brand-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
                 <button
-                  onClick={() => setQuantity(Math.max(0, quantity - 1))}
-                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 flex items-center justify-center text-brand-white"
+                  onClick={() => setQuantity(decreaseQuantity(quantity))}
+                  disabled={isDecreaseDisabled(quantity)}
+                  className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 flex items-center justify-center text-brand-white disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Decrease quantity"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -378,11 +380,11 @@ const ProductDetail = () => {
                 </button>
                 <span className="text-brand-white font-semibold min-w-[2ch] text-center">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(Math.min(99, quantity + 1))}
-                  disabled={quantity >= 99}
+                  onClick={() => setQuantity(increaseQuantity(quantity))}
+                  disabled={isIncreaseDisabled(quantity)}
                   className="w-8 h-8 rounded-full bg-brand-white/20 hover:bg-brand-white/30 flex items-center justify-center text-brand-white disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Increase quantity"
-                  title={quantity >= 99 ? "Maximum quantity reached" : "Increase quantity"}
+                  title={isIncreaseDisabled(quantity) ? "Maximum quantity reached" : "Increase quantity"}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -393,7 +395,6 @@ const ProductDetail = () => {
               {/* Add to Cart button - Primary CTA */}
               <button
                 onClick={buyNowHandler}
-                disabled={quantity === 0}
                 className={ctaPrimaryButtonClassName}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

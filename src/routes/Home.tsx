@@ -45,7 +45,7 @@ const Home = () => {
       <Section className="bg-brand-blue py-16 md:py-24">
         <Container size="md" className="text-center">
           <h2 className="text-h1 mb-6 text-brand-white">{homeConfig.experienceSection.heading}</h2>
-          <p className="text-small sm:text-body text-brand-white leading-relaxed">{homeConfig.experienceSection.description}</p>
+          <p className="text-body text-brand-white leading-relaxed lg:whitespace-nowrap">{homeConfig.experienceSection.description}</p>
         </Container>
       </Section>
     </Page>

@@ -32,6 +32,6 @@ export const homeConfig = {
   experienceSection: {
     heading: "Stay Wild Inside",
     description:
-      "Childlike creates experiences, not just snacks. Every product is designed with ritual in mind — flip, dunk, pour, crunch. Industrial design meets sensory pleasure.",
+      "You made it here, we didn't expect that. THIS PART DOES ABSOLUTELY NOTHING. The cookie button is the whole point.",
   },
 } as const;

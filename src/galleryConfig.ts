@@ -35,38 +35,52 @@ const imageModules = import.meta.glob<{ default: string }>(
 // Process and group images by album (folder name)
 function processGalleryImages(): { images: GalleryImage[]; albums: Album[] } {
   const imagesMap = new Map<string, GalleryImage[]>();
+  const rootImages: GalleryImage[] = [];
 
   // Process each image
   Object.entries(imageModules).forEach(([path, module]) => {
     // Extract album name from path
-    // Path format: /src/assets/Gallery/AlbumName/image.jpg
+    // Path format: /src/assets/Gallery/AlbumName/image.jpg (subfolder) or /src/assets/Gallery/image.jpg (root)
     const pathParts = path.split("/");
     const galleryIndex = pathParts.findIndex((part) => part === "Gallery");
 
-    if (galleryIndex === -1 || galleryIndex === pathParts.length - 2) {
-      // Skip images directly in Gallery folder (not in a subfolder)
+    if (galleryIndex === -1) {
+      // Skip images not in Gallery folder
       return;
     }
 
-    const albumName = pathParts[galleryIndex + 1];
     const fileName = pathParts[pathParts.length - 1];
 
-    // Create image object
-    const image: GalleryImage = {
-      src: module.default,
-      fileName,
-      album: albumName,
-      uploadedAt: new Date(), // You can customize this timestamp
-    };
+    // Check if this is a root-level image or subfolder image
+    if (galleryIndex === pathParts.length - 2) {
+      // Root-level image: /src/assets/Gallery/image.jpg
+      // Include in feed, but don't create an album
+      const image: GalleryImage = {
+        src: module.default,
+        fileName,
+        album: "root", // Mark as root
+        uploadedAt: new Date(),
+      };
+      rootImages.push(image);
+    } else {
+      // Subfolder image: /src/assets/Gallery/AlbumName/image.jpg
+      const albumName = pathParts[galleryIndex + 1];
+      const image: GalleryImage = {
+        src: module.default,
+        fileName,
+        album: albumName,
+        uploadedAt: new Date(),
+      };
 
-    // Group by album
-    if (!imagesMap.has(albumName)) {
-      imagesMap.set(albumName, []);
+      // Group by album
+      if (!imagesMap.has(albumName)) {
+        imagesMap.set(albumName, []);
+      }
+      imagesMap.get(albumName)!.push(image);
     }
-    imagesMap.get(albumName)!.push(image);
   });
 
-  // Convert to albums array
+  // Convert to albums array (only from subfolders, not root)
   const albums: Album[] = Array.from(imagesMap.entries()).map(
     ([albumName, images]) => ({
       name: albumName,
@@ -79,9 +93,11 @@ function processGalleryImages(): { images: GalleryImage[]; albums: Album[] } {
   );
 
   // Get all images sorted by uploadedAt (for Feed view)
-  const allImages = Array.from(imagesMap.values())
-    .flat()
-    .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
+  // Include both root images and subfolder images
+  const allImages = [
+    ...rootImages,
+    ...Array.from(imagesMap.values()).flat(),
+  ].sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
 
   return { images: allImages, albums };
 }

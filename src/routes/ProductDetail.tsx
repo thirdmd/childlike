@@ -334,7 +334,7 @@ const ProductDetail = () => {
               </p>
               {currentFlavor?.compareTitle && (
                 <div className="flex items-center gap-3">
-                  <p className="text-brand-white/60 text-xs">See how Childlike compare to other brands:</p>
+                  <p className="text-brand-white/60 text-xs">See how Childlike 🐐 compares to other brands:</p>
                   <button
                     onClick={() => setShowComparisonModal(true)}
                     className="px-4 py-2 bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-md rounded-full border border-brand-white/20 hover:border-brand-white/40 text-brand-white text-xs font-semibold transition-all duration-300"

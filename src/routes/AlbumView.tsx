@@ -33,7 +33,7 @@ const AlbumView = () => {
 
   return (
     <Page className="bg-brand-blue">
-      <Section className="bg-brand-blue py-16 sm:py-24">
+      <Section className="bg-brand-blue pt-4 pb-16 sm:pt-6 sm:pb-24">
         <Container>
           <button
             onClick={() => navigate("/gallery")}

@@ -1,18 +1,16 @@
 import { Page } from "@/components/layout/Page";
-import { Section } from "@/components/layout/Section";
-import { Container } from "@/components/layout/Container";
 
 const FAQ = () => {
   return (
     <Page className="bg-brand-blue">
-      <Section className="bg-brand-blue">
-        <Container>
-          <h1 className="text-h1 text-brand-white">FAQ Page Placeholder</h1>
+      <div className="bg-brand-blue pb-16 sm:pb-24">
+        <div className="container mx-auto px-4 pt-4 sm:pt-6 ml-4 sm:ml-6">
+          <h1 className="text-h1 text-brand-white">FAQs</h1>
           <p className="mt-4 text-body text-brand-white/70">
-            Frequently asked questions will be displayed here.
+            Common Qs
           </p>
-        </Container>
-      </Section>
+        </div>
+      </div>
     </Page>
   );
 };

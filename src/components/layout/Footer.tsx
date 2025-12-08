@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { siteConfig } from "@/config/site";
+import { SocialMediaIcons } from "@/components/SocialMediaIcons";
 
 export const Footer = () => {
   return (
@@ -9,7 +10,7 @@ export const Footer = () => {
           <p className="text-sm text-foreground/60">
             {siteConfig.footerCopy}
           </p>
-          
+
           <div className="flex items-center gap-6">
             {siteConfig.footerLinks.map((item) => (
               <Link
@@ -20,6 +21,8 @@ export const Footer = () => {
                 {item.label}
               </Link>
             ))}
+
+            <SocialMediaIcons variant="footer" />
           </div>
         </div>
       </div>

@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Page } from "@/components/layout/Page";
-import { Section } from "@/components/layout/Section";
-import { Container } from "@/components/layout/Container";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ctaPrimaryButtonClassName } from "@/config/ctaStyles";
+import { SocialMediaIcons } from "@/components/SocialMediaIcons";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -91,12 +90,15 @@ const Contact = () => {
 
   return (
     <Page className="bg-brand-blue">
-      <Section className="bg-brand-blue">
-        <Container>
-          <h1 className="text-h1 text-brand-white">Contact Page Placeholder</h1>
-          <p className="mt-4 text-body text-brand-white/70">
-            Contact form and waitlist will be displayed here.
-          </p>
+      <div className="bg-brand-blue pb-16 sm:pb-24">
+        <div className="container mx-auto px-4 pt-4 sm:pt-6 ml-4 sm:ml-6">
+          <h1 className="text-h1 text-brand-white">Contact Page</h1>
+          <div className="mt-4 flex items-center gap-4">
+            <p className="text-body text-brand-white/70">
+              You can reach out to us through here boy.
+            </p>
+            <SocialMediaIcons variant="inline" />
+          </div>
 
           <form onSubmit={handleSubmit} className="mt-8 max-w-md space-y-4">
             <div>
@@ -129,9 +131,9 @@ const Contact = () => {
                 rows={5}
               />
             </div>
-            <Button type="submit" disabled={isLoading}>
+            <button type="submit" disabled={isLoading} className={ctaPrimaryButtonClassName}>
               {isLoading ? "Sending..." : "Send Message"}
-            </Button>
+            </button>
           </form>
 
           <div className="mt-12">
@@ -156,8 +158,8 @@ const Contact = () => {
               </button>
             </form>
           </div>
-        </Container>
-      </Section>
+        </div>
+      </div>
     </Page>
   );
 };

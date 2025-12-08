@@ -1,25 +1,31 @@
 import { Page } from "@/components/layout/Page";
-import { Section } from "@/components/layout/Section";
-import { Container } from "@/components/layout/Container";
 import { galleryImages, galleryAlbums } from "@/galleryConfig";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Gallery = () => {
-  const [activeTab, setActiveTab] = useState<"feed" | "albums">("feed");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<"feed" | "albums">(
+    (searchParams.get("tab") as "feed" | "albums") || "feed"
+  );
   const navigate = useNavigate();
+
+  // Update URL when tab changes
+  useEffect(() => {
+    setSearchParams({ tab: activeTab });
+  }, [activeTab, setSearchParams]);
 
   return (
     <Page className="bg-brand-blue">
-      <Section className="bg-brand-blue py-16 sm:py-24">
-        <Container>
+      <div className="bg-brand-blue pb-16 sm:pb-24">
+        <div className="container mx-auto px-4 pt-4 sm:pt-6 ml-4 sm:ml-6">
           <h1 className="text-h1 text-brand-white">Gallery</h1>
           <p className="mt-4 text-body text-brand-white/70 max-w-2xl">
             Snapshots from the road—unfiltered, unexpected, and oddly charming 🗿
           </p>
 
           {/* Tabs */}
-          <div className="mt-8 flex gap-4 border-b border-brand-white/20">
+          <div className="mt-8 mb-8 flex gap-4 border-b border-brand-white/20">
             <button
               onClick={() => setActiveTab("feed")}
               className={`pb-3 px-2 text-lg font-semibold transition-colors relative ${
@@ -47,11 +53,6 @@ const Gallery = () => {
               )}
             </button>
           </div>
-        </Container>
-      </Section>
-
-      <Section className="bg-brand-blue py-16 sm:py-24">
-        <Container>
           {activeTab === "feed" ? (
             // Feed View: All images in masonry layout
             galleryImages.length > 0 ? (
@@ -129,8 +130,8 @@ const Gallery = () => {
               </div>
             )
           )}
-        </Container>
-      </Section>
+        </div>
+      </div>
     </Page>
   );
 };

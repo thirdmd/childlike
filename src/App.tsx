@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { useScrollMemory } from "@/hooks/useScrollMemory";
 import Home from "./routes/Home";
 import ProductDetail from "./routes/ProductDetail";
 import Cart from "./routes/Cart";
@@ -22,15 +23,13 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <CartProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Header />
-          <Routes>
+const AppContent = () => {
+  useScrollMemory();
+
+  return (
+    <>
+      <Header />
+      <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products/:slug" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
@@ -45,7 +44,19 @@ const App = () => (
             <Route path="/account" element={<Account />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <Footer />
+      <Footer />
+    </>
+  );
+};
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <CartProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppContent />
         </BrowserRouter>
       </CartProvider>
     </TooltipProvider>

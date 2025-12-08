@@ -1,21 +1,15 @@
 import { Page } from "@/components/layout/Page";
-import { Section } from "@/components/layout/Section";
-import { Container } from "@/components/layout/Container";
 
 const Blog = () => {
   return (
     <Page className="bg-brand-blue">
-      <Section className="bg-brand-blue py-16 sm:py-24">
-        <Container>
+      <div className="bg-brand-blue pb-16 sm:pb-24">
+        <div className="container mx-auto px-4 pt-4 sm:pt-6 ml-4 sm:ml-6">
           <h1 className="text-h1 text-brand-white">Blog</h1>
-          <p className="mt-4 text-body text-brand-white/70 max-w-2xl">
-          Evidence-based nutrition, stories, and playful insights 🥶.
+          <p className="mt-4 mb-8 text-body text-brand-white/70 max-w-2xl">
+            Evidence-based nutrition, stories, and playful insights 🥶
           </p>
-        </Container>
-      </Section>
 
-      <Section className="bg-brand-blue py-16 sm:py-24">
-        <Container>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <article
@@ -40,8 +34,8 @@ const Blog = () => {
               </article>
             ))}
           </div>
-        </Container>
-      </Section>
+        </div>
+      </div>
     </Page>
   );
 };

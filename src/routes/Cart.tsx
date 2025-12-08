@@ -117,7 +117,7 @@ const Cart = () => {
               Add some products to your cart to get started.
             </p>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/products/chewy-protein-cookie")}
               className={ctaPrimaryButtonClassName}
             >
               Continue Shopping

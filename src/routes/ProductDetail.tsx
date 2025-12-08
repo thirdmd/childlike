@@ -14,6 +14,8 @@ import { useCart } from "@/context/CartContext";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { calculateItemTotal, logAnalyticsEvent, createAnalyticsEvent } from "@/lib/pricingService";
+import { ReviewsDisplay } from "@/components/ReviewsDisplay";
+import { ReviewsModal } from "@/components/ReviewsModal";
 
 /**
  * CENTRALIZED PRODUCT IMAGE NAMING CONVENTION
@@ -71,6 +73,8 @@ const ProductDetail = () => {
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentFlavorIndex, setCurrentFlavorIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [showComparisonModal, setShowComparisonModal] = useState(false);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
 
   // Find initial product index
   useEffect(() => {
@@ -300,37 +304,54 @@ const ProductDetail = () => {
           {/* Right: Macros & Info */}
           <div className="lg:col-span-3 space-y-6">
             {/* Macro circles */}
-            <div className="flex gap-3">
-              <div className="w-16 h-16 rounded-full bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/30">
-                <div className="text-center">
-                  <p className="text-brand-white font-bold text-sm">{product.macros.protein}g</p>
-                  <p className="text-brand-white/60 text-xs">protein</p>
+            {currentFlavor && (
+              <div className="flex gap-3">
+                <div className="w-16 h-16 rounded-full bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/30">
+                  <div className="text-center">
+                    <p className="text-brand-white font-bold text-sm">{currentFlavor.macros.calories}</p>
+                    <p className="text-brand-white/60 text-xs">cals</p>
+                  </div>
+                </div>
+                <div className="w-16 h-16 rounded-full bg-brand-white/10 backdrop-blur-sm flex items-center justify-center border border-brand-white/20">
+                  <div className="text-center">
+                    <p className="text-brand-white font-bold text-sm">{currentFlavor.macros.protein}g</p>
+                    <p className="text-brand-white/60 text-xs">protein</p>
+                  </div>
+                </div>
+                <div className="w-16 h-16 rounded-full bg-brand-white/10 backdrop-blur-sm flex items-center justify-center border border-brand-white/20">
+                  <div className="text-center">
+                    <p className="text-brand-white font-bold text-sm">&lt;{currentFlavor.macros.sugar}g</p>
+                    <p className="text-brand-white/60 text-xs">sugars</p>
+                  </div>
                 </div>
               </div>
-              <div className="w-16 h-16 rounded-full bg-brand-white/10 backdrop-blur-sm flex items-center justify-center border border-brand-white/20">
-                <div className="text-center">
-                  <p className="text-brand-white font-bold text-sm">{product.macros.sugar}g</p>
-                  <p className="text-brand-white/60 text-xs">sugar</p>
-                </div>
-              </div>
-              <div className="w-16 h-16 rounded-full bg-brand-white/10 backdrop-blur-sm flex items-center justify-center border border-brand-white/20">
-                <div className="text-center">
-                  <p className="text-brand-white font-bold text-sm">{product.macros.carbs}g</p>
-                  <p className="text-brand-white/60 text-xs">carbs</p>
-                </div>
-              </div>
-            </div>
+            )}
 
             {/* Description */}
-            <p className="text-brand-white/80 text-sm leading-relaxed">
-              {product.description}
-            </p>
-
-            {/* Status badge */}
-            <div className="inline-flex items-center gap-2 text-sm text-brand-white/70">
-              <div className={`w-2 h-2 rounded-full ${product.status === 'available' ? 'bg-green-400' : 'bg-brand-white/40'}`} />
-              {product.status === 'available' ? 'Available' : 'Coming Soon'}
+            <div className="space-y-3">
+              <p className="text-brand-white/80 text-sm leading-relaxed">
+                {currentFlavor?.description || product.description}
+              </p>
+              {currentFlavor?.compareTitle && (
+                <div className="flex items-center gap-3">
+                  <p className="text-brand-white/60 text-xs">See how Childlike compare to other brands:</p>
+                  <button
+                    onClick={() => setShowComparisonModal(true)}
+                    className="px-4 py-2 bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-md rounded-full border border-brand-white/20 hover:border-brand-white/40 text-brand-white text-xs font-semibold transition-all duration-300"
+                  >
+                    Compare
+                  </button>
+                </div>
+              )}
             </div>
+
+            {/* Reviews Display */}
+            {currentFlavor && (
+              <ReviewsDisplay
+                reviews={currentFlavor.reviews}
+                onOpenReviews={() => setShowReviewsModal(true)}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -426,6 +447,43 @@ const ProductDetail = () => {
             />
           ))}
         </div>
+      )}
+
+      {/* Comparison Modal */}
+      {showComparisonModal && currentFlavor?.compareTitle && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-brand-blue border border-brand-white/20 rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-brand-blue border-b border-brand-white/20 p-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-brand-white">{currentFlavor.compareTitle}</h2>
+              <button
+                onClick={() => setShowComparisonModal(false)}
+                className="w-8 h-8 rounded-full bg-brand-white/10 hover:bg-brand-white/20 flex items-center justify-center text-brand-white transition-colors"
+                aria-label="Close modal"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              <p className="text-brand-white/70 text-sm">
+                Comparison table coming soon. 3 columns × 6 rows with detailed comparison data.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reviews Modal */}
+      {showReviewsModal && currentFlavor && (
+        <ReviewsModal
+          flavorName={`${product.name} - ${currentFlavor.name}`}
+          reviews={currentFlavor.reviews}
+          onClose={() => setShowReviewsModal(false)}
+        />
       )}
     </div>
   );

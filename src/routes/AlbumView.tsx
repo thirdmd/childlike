@@ -44,14 +44,10 @@ const AlbumView = () => {
           </button>
 
           <h1 className="text-h1 text-brand-white">{album.name}</h1>
-          <p className="mt-2 text-body text-brand-white/70">
+          <p className="mt-2 mb-8 text-body text-brand-white/70">
             {album.imageCount} {album.imageCount === 1 ? "image" : "images"}
           </p>
-        </Container>
-      </Section>
 
-      <Section className="bg-brand-blue py-16 sm:py-24">
-        <Container>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-max">
             {album.images.map((image, idx) => (
               <div

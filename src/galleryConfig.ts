@@ -28,7 +28,7 @@ export interface Album {
 
 // Dynamically import all images from Gallery subfolders
 const imageModules = import.meta.glob<{ default: string }>(
-  "/src/assets/Gallery/**/*.{jpg,jpeg,png,webp,gif}",
+  "/src/assets/Gallery/**/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,gif,GIF}",
   { eager: true }
 );
 

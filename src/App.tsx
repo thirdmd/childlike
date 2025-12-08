@@ -10,6 +10,9 @@ import Home from "./routes/Home";
 import ProductDetail from "./routes/ProductDetail";
 import Cart from "./routes/Cart";
 import About from "./routes/About";
+import Blog from "./routes/Blog";
+import Gallery from "./routes/Gallery";
+import AlbumView from "./routes/AlbumView";
 import FAQ from "./routes/FAQ";
 import Contact from "./routes/Contact";
 import Login from "./routes/Login";
@@ -32,6 +35,9 @@ const App = () => (
             <Route path="/products/:slug" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/about" element={<About />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/gallery/:albumName" element={<AlbumView />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/auth/login" element={<Login />} />

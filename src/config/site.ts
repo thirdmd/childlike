@@ -5,8 +5,9 @@ export const siteConfig = {
     { label: "Home", path: "/" },
     { label: "Products", path: "/products/chewy-protein-cookie" },
     { label: "About", path: "/about" },
+    { label: "Blog", path: "/blog" },
+    { label: "Gallery", path: "/gallery" },
     { label: "FAQ", path: "/faq" },
-    { label: "Contact", path: "/contact" },
   ],
   footerLinks: [
     { label: "Privacy", path: "/privacy" },

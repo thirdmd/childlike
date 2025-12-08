@@ -13,6 +13,9 @@ export const authService = {
     fullName?: string
   ): Promise<AuthResult> {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase is not configured. Check your environment variables." };
+      }
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -45,6 +48,9 @@ export const authService = {
     password: string
   ): Promise<AuthResult> {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase is not configured. Check your environment variables." };
+      }
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -59,6 +65,9 @@ export const authService = {
 
   async signOut(): Promise<AuthResult> {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase is not configured. Check your environment variables." };
+      }
       const { error } = await supabase.auth.signOut();
       if (error) return { success: false, error: error.message };
       return { success: true };
@@ -72,6 +81,9 @@ export const authService = {
     error?: string;
   }> {
     try {
+      if (!supabase) {
+        return { session: null, error: "Supabase is not configured. Check your environment variables." };
+      }
       const { data, error } = await supabase.auth.getSession();
       if (error) return { session: null, error: error.message };
       return { session: data.session };
@@ -85,6 +97,9 @@ export const authService = {
     currentPassword: string
   ): Promise<AuthResult> {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase is not configured. Check your environment variables." };
+      }
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password: currentPassword,
@@ -102,6 +117,9 @@ export const authService = {
 
   async changePassword(newPassword: string): Promise<AuthResult> {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase is not configured. Check your environment variables." };
+      }
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
@@ -122,6 +140,9 @@ export const authService = {
     }
   ): Promise<AuthResult> {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase is not configured. Check your environment variables." };
+      }
       const { error } = await supabase
         .from("user_profiles")
         .update(updates)
@@ -139,6 +160,10 @@ export const authService = {
     file: File
   ): Promise<{ success: boolean; url?: string; error?: string }> {
     try {
+      if (!supabase) {
+        return { success: false, error: "Supabase is not configured. Check your environment variables." };
+      }
+
       console.log("=== UPLOAD START ===");
       console.log("User ID:", userId);
       console.log("File:", file.name, file.type, `${(file.size / 1024).toFixed(2)}KB`);
@@ -211,6 +236,11 @@ export const authService = {
   },
 
   onAuthStateChange(callback: (session: Session | null) => void) {
+    if (!supabase) {
+      console.error("Supabase is not configured. Check your environment variables.");
+      // Return a no-op unsubscribe function
+      return () => {};
+    }
     return supabase.auth.onAuthStateChange((_event, session) => {
       callback(session);
     });

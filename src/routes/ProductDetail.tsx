@@ -16,6 +16,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { calculateItemTotal, logAnalyticsEvent, createAnalyticsEvent } from "@/lib/pricingService";
 import { ReviewsDisplay } from "@/components/ReviewsDisplay";
 import { ReviewsModal } from "@/components/ReviewsModal";
+import { ComparisonTable } from "@/components/ComparisonTable";
 
 /**
  * CENTRALIZED PRODUCT IMAGE NAMING CONVENTION
@@ -320,7 +321,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="w-16 h-16 rounded-full bg-brand-white/10 backdrop-blur-sm flex items-center justify-center border border-brand-white/20">
                   <div className="text-center">
-                    <p className="text-brand-white font-bold text-sm">&lt;{currentFlavor.macros.sugar}g</p>
+                    <p className="text-brand-white font-bold text-sm">&lt;1g</p>
                     <p className="text-brand-white/60 text-xs">sugars</p>
                   </div>
                 </div>
@@ -469,9 +470,13 @@ const ProductDetail = () => {
 
             {/* Modal Content */}
             <div className="p-6">
-              <p className="text-brand-white/70 text-sm">
-                Comparison table coming soon. 3 columns × 6 rows with detailed comparison data.
-              </p>
+              {currentFlavor?.comparison ? (
+                <ComparisonTable data={currentFlavor.comparison} />
+              ) : (
+                <p className="text-brand-white/70 text-sm">
+                  Comparison data not available for this flavor.
+                </p>
+              )}
             </div>
           </div>
         </div>

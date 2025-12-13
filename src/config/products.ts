@@ -1,11 +1,23 @@
 export type ProductStatus = "coming_soon" | "available";
 
+export interface ComparisonRow {
+  attribute: string;
+  childlike: string;
+  competitor: string;
+}
+
+export interface ComparisonData {
+  competitorName: string;
+  rows: ComparisonRow[];
+}
+
 export interface Flavor {
   id: string;
   name: string;
   slug: string;
   description?: string; // Optional: flavor-specific description (overrides product description)
   compareTitle?: string; // Optional: flavor-specific comparison title (e.g. "Childlike vs Chipsahoy")
+  comparison?: ComparisonData; // Optional: flavor-specific comparison data
   macros: {
     calories: number;
     protein: number;
@@ -49,8 +61,33 @@ export const productsConfig: Product[] = [
         id: "chocolate-chip",
         name: "Chocolate Chip",
         slug: "chocolate-chip",
-        description: "Don't overthink it. It's a f*cking chewy chocolate-chip cookie… you know exactly what that is. Except this one is packing hard like a BBC (Buff Bake Cookie). High in protein, low in sugar, no compromise between taste and nutrition.",
+        description: "Stop overthinking. It's a f*cking chewy chocolate-chip cookie… you know exactly what that is. Except this one is packing hard like a BBC (Buff Bake Cookie). High in protein, low in sugar, no compromise between taste and nutrition.",
         compareTitle: "Childlike vs Chipsahoy",
+        comparison: {
+          competitorName: "Chips Ahoy!",
+          rows: [
+            {
+              attribute: "Color",
+              childlike: "better blue ✅",
+              competitor: "blue",
+            },
+            {
+              attribute: "Weight",
+              childlike: "69g (ideal number) ✅",
+              competitor: "definetely NOT 69g 😡",
+            },
+            {
+              attribute: "Age",
+              childlike: "2026",
+              competitor: "1963 ✅",
+            },
+            {
+              attribute: "How you feel after",
+              childlike: "I want more, and water ✅",
+              competitor: "i want more water",
+            },
+          ],
+        },
         macros: {
           calories: 270,
           protein: 22,

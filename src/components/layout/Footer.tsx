@@ -6,8 +6,8 @@ export const Footer = () => {
   return (
     <footer className="border-t border-brand-black/10 bg-background">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-foreground/60">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+          <p className="text-[clamp(0.875rem,3.5vw,1.125rem)] md:text-sm text-foreground/60 whitespace-nowrap text-center md:text-left w-full md:w-auto px-2 md:px-0">
             {siteConfig.footerCopy}
           </p>
 
@@ -16,7 +16,7 @@ export const Footer = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="text-sm text-foreground/60 md:hover:text-foreground active:opacity-80 transition-all duration-300"
+                className="text-[clamp(0.875rem,3.5vw,1.125rem)] md:text-sm text-foreground/60 md:hover:text-foreground active:opacity-80 transition-all duration-300"
               >
                 {item.label}
               </Link>

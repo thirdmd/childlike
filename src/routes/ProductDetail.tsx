@@ -1,7 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Page } from "@/components/layout/Page";
-import { productsConfig, getProductBySlug } from "@/config/products";
+import { productsConfig, getProductBySlug, getFlavorPrice } from "@/config/products";
 import { BrandButton } from "@/components/ui/BrandButton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { arrowButtonClassName, isProductValid } from "@/config/navigationRules";
@@ -156,7 +156,8 @@ const ProductDetail = () => {
 
     // Store quantity for toast message before reset
     const addedQuantity = quantity;
-    const totalPrice = calculateItemTotal(product.price, quantity);
+    const effectivePrice = getFlavorPrice(product, currentFlavor);
+    const totalPrice = calculateItemTotal(effectivePrice, quantity);
 
     // CRITICAL: Generate unique productId that includes flavor
     // Format: "product-slug-flavor-slug" or just "product-slug" if no flavor
@@ -175,7 +176,7 @@ const ProductDetail = () => {
         productId: uniqueProductId,
         slug: product.slug,
         name: product.name,
-        price: product.price,
+        price: effectivePrice,
         flavorId: currentFlavor?.id,
         flavorName: currentFlavor?.name,
       },
@@ -305,7 +306,7 @@ const ProductDetail = () => {
 
             {/* Flavor Navigation Indicators - Below Product Image */}
             {product.flavors && product.flavors.length > 0 && (
-              <div className="flex gap-2 -mt-4 md:-mt-8 lg:-mt-12">
+              <div className="flex gap-2 -mt-8 md:-mt-12 lg:-mt-16">
                 {product.flavors.map((_, index) => (
                   <button
                     key={index}
@@ -380,7 +381,7 @@ const ProductDetail = () => {
       {/* Bottom: Price & CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-brand-blue border-t border-brand-white/10">
         <div className="container mx-auto px-4 py-3 lg:py-4">
-          <div className="flex items-center justify-between gap-3 lg:gap-6 flex-wrap">
+          <div className="flex items-center justify-center lg:justify-between gap-3 lg:gap-6 flex-wrap">
             {/* Left: Small partnership text - Desktop only */}
             <div className="hidden lg:flex flex-1 min-w-[200px]">
               <p className="text-brand-white/60 text-xs leading-relaxed max-w-md">
@@ -389,19 +390,19 @@ const ProductDetail = () => {
             </div>
 
             {/* Center: Price */}
-            <div className="text-center lg:flex-initial flex-1">
+            <div className="text-center lg:flex-initial">
               {quantity > 0 ? (
                 <>
                   <p className="text-xs lg:text-sm text-brand-white/60 mb-0.5">
-                    {quantity}x {formatPrice(product.price)}
+                    {quantity}x {formatPrice(getFlavorPrice(product, currentFlavor))}
                   </p>
                   <p className="text-2xl lg:text-3xl font-bold text-brand-white">
-                    {formatPrice(calculateItemTotal(product.price, quantity))}
+                    {formatPrice(calculateItemTotal(getFlavorPrice(product, currentFlavor), quantity))}
                   </p>
                 </>
               ) : (
                 <p className="text-2xl lg:text-3xl font-bold text-brand-white">
-                  {formatPrice(product.price)}
+                  {formatPrice(getFlavorPrice(product, currentFlavor))}
                 </p>
               )}
             </div>

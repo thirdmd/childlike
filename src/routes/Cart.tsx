@@ -108,9 +108,9 @@ const Cart = () => {
 
   if (itemCount === 0) {
     return (
-      <Page>
-        <div className="min-h-screen flex items-center justify-center bg-brand-blue">
-          <div className="text-center max-w-md mx-auto px-4">
+      <Page className="bg-brand-blue">
+        <div className="h-[calc(100vh-80px-60px)] flex items-center justify-center bg-brand-blue md:min-h-screen">
+          <div className="text-center max-w-md mx-auto px-4 flex flex-col items-center">
             <ShoppingBag className="w-16 h-16 text-brand-white/40 mx-auto mb-4" />
             <h1 className="text-4xl font-bold text-brand-white mb-4">Your cart is empty</h1>
             <p className="text-brand-white/70 mb-8">

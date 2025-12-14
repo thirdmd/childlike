@@ -65,11 +65,11 @@ const Home = () => {
       </section>
 
       {/* Experience Section */}
-      <Section className="bg-brand-blue py-16 md:py-24">
+      <Section className="bg-brand-blue py-0 md:py-24">
         <Container size="md" className="text-center">
           <div className="px-5 md:px-0 w-full">
             <h2 className="text-[clamp(1.75rem,8vw,3rem)] md:text-[clamp(2.5rem,5vw,3rem)] mb-6 text-brand-white whitespace-nowrap font-black leading-tight">{homeConfig.experienceSection.heading}</h2>
-            <p className="text-[clamp(0.875rem,3.5vw,1.125rem)] md:text-[clamp(0.875rem,1.5vw,1rem)] text-brand-white leading-snug md:whitespace-nowrap font-bold">{homeConfig.experienceSection.description}</p>
+            <p className="text-[clamp(0.875rem,3.5vw,1.125rem)] md:text-[clamp(0.75rem,1.2vw,0.875rem)] text-brand-white leading-snug lg:whitespace-nowrap font-bold">{homeConfig.experienceSection.description}</p>
           </div>
         </Container>
       </Section>

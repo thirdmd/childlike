@@ -31,25 +31,27 @@ const AppContent = () => {
   const isProductPage = location.pathname.startsWith('/products/');
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen bg-brand-blue">
       <Header />
-      <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products/:slug" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/gallery/:albumName" element={<AlbumView />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/auth/register" element={<Register />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+      <div className="flex-1">
+        <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/products/:slug" element={<ProductDetail />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/gallery/:albumName" element={<AlbumView />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/register" element={<Register />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+      </div>
       {!isProductPage && <Footer />}
-    </>
+    </div>
   );
 };
 

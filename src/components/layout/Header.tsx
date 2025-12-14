@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
 import { iconButtonHoverClass } from "@/config/interactionStyles";
 import { ShoppingBag, User, Phone } from "lucide-react";
@@ -16,6 +16,18 @@ export const Header = () => {
   const { user, profile } = useCurrentUser();
   const displayCount = itemCount > 9 ? "9+" : itemCount.toString();
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [mobileMenuOpen]);
+
   /**
    * Determine if a nav item is active based on current route
    * Centralized: Used for both desktop and mobile navigation
@@ -31,7 +43,7 @@ export const Header = () => {
    */
   const getNavItemClassLocal = (path: string): string => {
     const isActive = isNavItemActive(path);
-    const baseClass = `font-black text-brand-white transition-all duration-300 border-b-4`;
+    const baseClass = `font-black text-brand-white transition-all duration-300 border-b-[3px]`;
     const activeClass = isActive
       ? `scale-110 border-brand-white`
       : `border-transparent md:hover:scale-125 md:hover:opacity-100 active:scale-[1.03] active:opacity-90`;
@@ -39,9 +51,18 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-brand-blue sticky top-0 z-[100] backdrop-blur-xl border-b border-brand-white/5">
-      <div className="w-full">
-        <div className="relative flex h-20 items-center justify-between lg:justify-start px-3 md:px-6 lg:px-8">
+    <>
+      {/* Backdrop overlay when mobile menu is open */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90] lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      <header className="bg-brand-blue sticky top-0 z-[100] backdrop-blur-xl border-b border-brand-white/5">
+        <div className="w-full">
+          <div className="relative flex h-20 items-center justify-between lg:justify-start px-3 md:px-6 lg:px-8">
           {/* Logo */}
           <Link to="/" className={`flex items-center justify-start z-10 ${iconButtonHoverClass}`}>
             <img
@@ -131,7 +152,7 @@ export const Header = () => {
                   className="block px-6 py-2"
                 >
                   <span
-                    className={`inline-block font-black text-brand-white text-lg transition-all duration-300 border-b-4 ${
+                    className={`inline-block font-black text-brand-white text-lg transition-all duration-300 border-b-[3px] ${
                       isActive
                         ? "border-brand-white scale-110"
                         : "border-transparent md:hover:scale-125 active:scale-[1.03] active:opacity-90"
@@ -144,23 +165,23 @@ export const Header = () => {
             })}
 
             {/* Mobile user actions */}
-            <div className="flex gap-2 pt-4">
+            <div className="flex gap-2 pt-4 px-6">
               <button
                 onClick={() => {
                   navigate(user ? "/account" : "/auth/login");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-2"
+                className="flex-1 px-3 py-2.5 rounded-full text-[clamp(0.75rem,3vw,0.875rem)] font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-1.5"
               >
                 {user && user.id ? (
                   <>
                     <Avatar userId={user.id} fullName={profile?.full_name} email={user.email} size="sm" profilePictureUrl={profile?.profile_picture_url} />
-                    Account
+                    <span className="whitespace-nowrap">Account</span>
                   </>
                 ) : (
                   <>
-                    <User className="w-4 h-4" />
-                    Sign In
+                    <User className="w-4 h-4 flex-shrink-0" />
+                    <span className="whitespace-nowrap">Sign In</span>
                   </>
                 )}
               </button>
@@ -169,22 +190,22 @@ export const Header = () => {
                   navigate("/contact");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-2"
+                className="flex-1 px-3 py-2.5 rounded-full text-[clamp(0.75rem,3vw,0.875rem)] font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-1.5"
                 aria-label="Go to contact"
               >
-                <Phone className="w-4 h-4" />
-                Contact
+                <Phone className="w-4 h-4 flex-shrink-0" />
+                <span className="whitespace-nowrap">Contact</span>
               </button>
               <button
                 onClick={() => {
                   navigate("/cart");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-2 relative"
+                className="flex-1 px-3 py-2.5 rounded-full text-[clamp(0.75rem,3vw,0.875rem)] font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-1.5 relative"
                 aria-label="Go to cart"
               >
-                <ShoppingBag className="w-4 h-4" />
-                Cart
+                <ShoppingBag className="w-4 h-4 flex-shrink-0" />
+                <span className="whitespace-nowrap">Cart</span>
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-white text-brand-blue rounded-full flex items-center justify-center text-xs font-bold">
                   {displayCount}
                 </span>
@@ -194,5 +215,6 @@ export const Header = () => {
         )}
       </div>
     </header>
+    </>
   );
 };

@@ -91,12 +91,12 @@ const Contact = () => {
   return (
     <Page className="bg-brand-blue">
       <div className="bg-brand-blue pb-16 sm:pb-24">
-        <div className="container mx-auto px-4 pt-4 sm:pt-6 ml-4 sm:ml-6">
-          <h1 className="text-h1 text-brand-white">Contact Page</h1>
-          <div className="mt-4 flex items-center gap-4">
-            <p className="text-body text-brand-white/70">
-              You can reach out to us through here boy.
-            </p>
+        <div className="container mx-auto px-4 pt-4 sm:pt-6">
+          <h1 className="text-[clamp(2rem,8vw,3rem)] md:text-h1 text-brand-white font-black">Contact Page</h1>
+          <p className="mt-4 text-[clamp(0.875rem,3.5vw,1rem)] md:text-body text-brand-white/70 leading-relaxed">
+            You can reach out to us through here boy.
+          </p>
+          <div className="mt-4">
             <SocialMediaIcons variant="inline" />
           </div>
 
@@ -137,8 +137,8 @@ const Contact = () => {
           </form>
 
           <div className="mt-12">
-            <h2 className="text-h2 text-brand-white">Join the waitlist</h2>
-            <p className="mt-2 text-body text-brand-white/70">
+            <h2 className="text-[clamp(1.5rem,6vw,2rem)] md:text-h2 text-brand-white font-black">Join the waitlist</h2>
+            <p className="mt-2 text-[clamp(0.875rem,3.5vw,1rem)] md:text-body text-brand-white/70 leading-relaxed">
               Be the first to know when we launch.
             </p>
 

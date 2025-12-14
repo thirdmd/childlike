@@ -33,13 +33,13 @@ interface SocialMediaIconsProps {
 export const SocialMediaIcons = ({ variant = "footer" }: SocialMediaIconsProps) => {
   const isFooter = variant === "footer";
 
-  const iconClass = isFooter ? "w-5 h-5" : "w-5 h-5";
+  const iconClass = isFooter ? "w-[clamp(1.125rem,5vw,1.5rem)] h-[clamp(1.125rem,5vw,1.5rem)] md:w-5 md:h-5" : "w-5 h-5";
   const buttonClass = isFooter
     ? "text-foreground/60 md:hover:text-foreground active:opacity-80 transition-all duration-300"
     : "group w-10 h-10 rounded-full bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/20 md:hover:border-brand-white/40 active:opacity-80 transition-all duration-300 md:hover:scale-110";
 
   return (
-    <div className={isFooter ? "flex items-center gap-4 ml-4 pl-4 border-l border-brand-black/10" : "flex gap-2"}>
+    <div className={isFooter ? "flex items-center gap-2 md:gap-4 md:ml-4 md:pl-4 md:border-l md:border-brand-black/10" : "flex gap-2"}>
       <a
         href={socialLinks.instagram}
         target="_blank"

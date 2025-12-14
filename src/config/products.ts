@@ -15,6 +15,7 @@ export interface Flavor {
   id: string;
   name: string;
   slug: string;
+  price?: number; // Optional: flavor-specific price (overrides product price)
   description?: string; // Optional: flavor-specific description (overrides product description)
   compareTitle?: string; // Optional: flavor-specific comparison title (e.g. "Childlike vs Chipsahoy")
   comparison?: ComparisonData; // Optional: flavor-specific comparison data
@@ -103,6 +104,7 @@ export const productsConfig: Product[] = [
         id: "peanut-butter",
         name: "Peanut Butter",
         slug: "peanut-butter",
+        price: 125,
         description: "Rich, creamy peanut butter flavor in a soft, chewy cookie. High protein, low sugar, real peanut butter. Classic taste, engineered nutrition.",
         compareTitle: "Childlike vs Chipsahoy",
         macros: {
@@ -120,6 +122,7 @@ export const productsConfig: Product[] = [
         id: "pistachio-biskit",
         name: "Pistachio Biskit",
         slug: "pistachio-biskit",
+        price: 130,
         description: "Unique pistachio flavor with a soft, biskit-style texture. High protein, low sugar, real pistachios. Sophisticated taste, premium ingredients.",
         compareTitle: "Childlike vs Chipsahoy",
         macros: {
@@ -159,4 +162,13 @@ export const productsConfig: Product[] = [
 
 export const getProductBySlug = (slug: string): Product | undefined => {
   return productsConfig.find((product) => product.slug === slug);
+};
+
+/**
+ * Get the effective price for a product flavor
+ * Returns flavor-specific price if set, otherwise returns product base price
+ * Centralized pricing logic - DO NOT hardcode prices elsewhere
+ */
+export const getFlavorPrice = (product: Product, flavor?: Flavor): number => {
+  return flavor?.price ?? product.price;
 };

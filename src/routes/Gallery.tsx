@@ -18,40 +18,44 @@ const Gallery = () => {
   return (
     <Page className="bg-brand-blue">
       <div className="bg-brand-blue pb-16 sm:pb-24">
-        <div className="container mx-auto px-4 pt-4 sm:pt-6 ml-4 sm:ml-6">
-          <h1 className="text-h1 text-brand-white">Gallery</h1>
-          <p className="mt-4 text-body text-brand-white/70 max-w-2xl">
+        <div className="container mx-auto px-4 pt-4 sm:pt-6">
+          <h1 className="text-[clamp(2rem,8vw,3rem)] md:text-h1 text-brand-white font-black">Gallery</h1>
+          <p className="mt-4 text-[clamp(0.875rem,3.5vw,1rem)] md:text-body text-brand-white/70 max-w-2xl leading-relaxed">
             Snapshots from the road—unfiltered, unexpected, and oddly charming 🗿
           </p>
 
           {/* Tabs */}
-          <div className="mt-8 mb-8 flex gap-4 border-b border-brand-white/20">
-            <button
-              onClick={() => setActiveTab("feed")}
-              className={`pb-3 px-2 text-lg font-semibold transition-colors relative ${
-                activeTab === "feed"
-                  ? "text-brand-white"
-                  : "text-brand-white/50 hover:text-brand-white/70"
-              }`}
-            >
-              Feed
+          <div className="mt-6 md:mt-8 mb-6 md:mb-8 flex gap-4">
+            <div className="flex flex-col">
+              <button
+                onClick={() => setActiveTab("feed")}
+                className={`px-0 text-lg font-semibold transition-colors ${
+                  activeTab === "feed"
+                    ? "text-brand-white"
+                    : "text-brand-white/50 hover:text-brand-white/70"
+                }`}
+              >
+                Feed
+              </button>
               {activeTab === "feed" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-white" />
+                <div className="h-[3px] bg-brand-white mt-2 w-full" />
               )}
-            </button>
-            <button
-              onClick={() => setActiveTab("albums")}
-              className={`pb-3 px-2 text-lg font-semibold transition-colors relative ${
-                activeTab === "albums"
-                  ? "text-brand-white"
-                  : "text-brand-white/50 hover:text-brand-white/70"
-              }`}
-            >
-              Albums
+            </div>
+            <div className="flex flex-col">
+              <button
+                onClick={() => setActiveTab("albums")}
+                className={`px-0 text-lg font-semibold transition-colors ${
+                  activeTab === "albums"
+                    ? "text-brand-white"
+                    : "text-brand-white/50 hover:text-brand-white/70"
+                }`}
+              >
+                Albums
+              </button>
               {activeTab === "albums" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-white" />
+                <div className="h-[3px] bg-brand-white mt-2 w-full" />
               )}
-            </button>
+            </div>
           </div>
           {activeTab === "feed" ? (
             // Feed View: All images in masonry layout

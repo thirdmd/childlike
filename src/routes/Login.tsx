@@ -28,7 +28,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-brand-blue">
+    <div className="h-[calc(100vh-80px-60px)] md:min-h-screen flex items-center justify-center px-4 bg-brand-blue">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-brand-white">Sign In</h1>

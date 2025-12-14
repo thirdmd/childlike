@@ -33,8 +33,8 @@ const AlbumView = () => {
 
   return (
     <Page className="bg-brand-blue">
-      {/* Back button - positioned tight to logo */}
-      <div className="container mx-auto px-4 py-0">
+      {/* Back button - positioned at left edge */}
+      <div className="px-2 md:px-4 py-0">
         <button
           onClick={() => navigate("/gallery?tab=albums")}
           className="flex items-center gap-2 text-brand-white/70 hover:text-brand-white transition-colors"
@@ -46,9 +46,9 @@ const AlbumView = () => {
 
       {/* Main content section */}
       <div className="bg-brand-blue pb-16 sm:pb-24">
-        <div className="container mx-auto px-4 pt-4 sm:pt-6 ml-4 sm:ml-6">
-          <h1 className="text-h1 text-brand-white">{album.name}</h1>
-          <p className="mt-2 mb-8 text-body text-brand-white/70">
+        <div className="container mx-auto px-4 pt-4 sm:pt-6">
+          <h1 className="text-[clamp(2rem,8vw,3rem)] md:text-h1 text-brand-white font-black">{album.name}</h1>
+          <p className="mt-2 mb-8 text-[clamp(0.875rem,3.5vw,1rem)] md:text-body text-brand-white/70 leading-relaxed">
             {album.imageCount} {album.imageCount === 1 ? "image" : "images"}
           </p>
 

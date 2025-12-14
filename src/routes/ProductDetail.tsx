@@ -222,9 +222,9 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="bg-brand-blue h-screen flex flex-col overflow-hidden">
+    <div className="bg-brand-blue min-h-screen md:h-screen flex flex-col overflow-y-auto">
       {/* Back button - Icon only */}
-      <div className="container mx-auto px-4 py-4 relative z-10">
+      <div className="px-2 lg:px-4 py-2 lg:py-4 relative z-10 flex">
         <Link
           to="/"
           className={`inline-flex items-center justify-center w-10 h-10 md:w-8 md:h-8 text-brand-white/70 md:hover:text-brand-white active:opacity-80 transition-all duration-300 ${iconButtonHoverClass}`}
@@ -237,13 +237,13 @@ const ProductDetail = () => {
       </div>
 
       {/* Product Detail Section */}
-      <div className="container mx-auto px-4 flex-1 flex items-center pt-2 pb-0">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center -mt-48">
+      <div className="container mx-auto px-4 flex-1 flex items-center pt-2 pb-40 lg:pb-0">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start lg:items-center mt-0 lg:-mt-48">
           
           {/* Left: Product Name & Details */}
           <div className="lg:col-span-3 space-y-4">
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold text-brand-white leading-tight">
+              <h1 className="text-[clamp(1.5rem,6vw,2.5rem)] lg:text-5xl font-bold text-brand-white leading-tight whitespace-nowrap lg:whitespace-normal">
                 {product.name}
               </h1>
               {currentFlavor && (
@@ -255,50 +255,70 @@ const ProductDetail = () => {
           </div>
 
           {/* Center: Large Product Image with Navigation Arrows */}
-          <div className="lg:col-span-6 flex justify-center items-center relative">
-            {/* Left Arrow - Visible only if can go previous */}
-            {canGoPrevious && (
-              <button
-                onClick={handlePrevious}
-                className={`${arrowButtonClassName} left-0`}
-                aria-label="Previous flavor or product"
-              >
-                <ChevronLeft className="w-6 h-6 text-brand-white" />
-              </button>
-            )}
+          <div className="lg:col-span-6 flex flex-col justify-center items-center relative">
+            <div className="flex justify-center items-center relative w-full">
+              {/* Left Arrow - Visible only if can go previous */}
+              {canGoPrevious && (
+                <button
+                  onClick={handlePrevious}
+                  className={`${arrowButtonClassName} left-0`}
+                  aria-label="Previous flavor or product"
+                >
+                  <ChevronLeft className="w-6 h-6 text-brand-white" />
+                </button>
+              )}
 
-            {/* Product Image Container */}
-            <div className="relative w-full max-w-md aspect-square">
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
+              {/* Product Image Container */}
+              <div className="relative w-full max-w-md aspect-square">
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
 
-              {/* Product Image - Show image or product title if no image available */}
-              <div className="relative w-full h-full flex items-center justify-center">
-                {productImageSrc ? (
-                  <img
-                    src={productImageSrc}
-                    alt={currentFlavor ? `${product.name} - ${currentFlavor.name}` : product.name}
-                    className="w-[85%] h-[85%] object-contain drop-shadow-2xl animate-float"
-                  />
-                ) : (
-                  <div className="text-center">
-                    <h2 className="text-3xl font-black text-brand-white/60">
-                      {getMissingImageFallback(product.name, currentFlavor?.name)}
-                    </h2>
-                  </div>
-                )}
+                {/* Product Image - Show image or product title if no image available */}
+                <div className="relative w-full h-full flex items-center justify-center">
+                  {productImageSrc ? (
+                    <img
+                      src={productImageSrc}
+                      alt={currentFlavor ? `${product.name} - ${currentFlavor.name}` : product.name}
+                      className="w-[85%] h-[85%] object-contain drop-shadow-2xl animate-float"
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <h2 className="text-3xl font-black text-brand-white/60">
+                        {getMissingImageFallback(product.name, currentFlavor?.name)}
+                      </h2>
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Right Arrow - Visible only if can go next */}
+              {canGoNext && (
+                <button
+                  onClick={handleNext}
+                  className={`${arrowButtonClassName} right-0`}
+                  aria-label="Next flavor or product"
+                >
+                  <ChevronRight className="w-6 h-6 text-brand-white" />
+                </button>
+              )}
             </div>
 
-            {/* Right Arrow - Visible only if can go next */}
-            {canGoNext && (
-              <button
-                onClick={handleNext}
-                className={`${arrowButtonClassName} right-0`}
-                aria-label="Next flavor or product"
-              >
-                <ChevronRight className="w-6 h-6 text-brand-white" />
-              </button>
+            {/* Flavor Navigation Indicators - Below Product Image */}
+            {product.flavors && product.flavors.length > 0 && (
+              <div className="flex gap-2 -mt-4 md:-mt-8 lg:-mt-12">
+                {product.flavors.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentFlavorIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      index === currentFlavorIndex
+                        ? "bg-brand-white"
+                        : "bg-brand-white/30 md:hover:bg-brand-white/60 active:bg-brand-white/50"
+                    }`}
+                    aria-label={`Go to flavor ${index + 1}`}
+                  />
+                ))}
+              </div>
             )}
           </div>
 
@@ -358,29 +378,29 @@ const ProductDetail = () => {
       </div>
 
       {/* Bottom: Price & CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-brand-blue/95 backdrop-blur-lg border-t border-brand-white/10">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between gap-6 flex-wrap">
-            {/* Left: Small partnership text */}
-            <div className="flex-1 min-w-[200px]">
+      <div className="fixed bottom-0 left-0 right-0 bg-brand-blue border-t border-brand-white/10">
+        <div className="container mx-auto px-4 py-3 lg:py-4">
+          <div className="flex items-center justify-between gap-3 lg:gap-6 flex-wrap">
+            {/* Left: Small partnership text - Desktop only */}
+            <div className="hidden lg:flex flex-1 min-w-[200px]">
               <p className="text-brand-white/60 text-xs leading-relaxed max-w-md">
                 Pioneering nutrition engineered with innovation, design, and play
               </p>
             </div>
 
             {/* Center: Price */}
-            <div className="text-center">
+            <div className="text-center lg:flex-initial flex-1">
               {quantity > 0 ? (
                 <>
-                  <p className="text-sm text-brand-white/60 mb-1">
+                  <p className="text-xs lg:text-sm text-brand-white/60 mb-0.5">
                     {quantity}x {formatPrice(product.price)}
                   </p>
-                  <p className="text-3xl font-bold text-brand-white">
+                  <p className="text-2xl lg:text-3xl font-bold text-brand-white">
                     {formatPrice(calculateItemTotal(product.price, quantity))}
                   </p>
                 </>
               ) : (
-                <p className="text-3xl font-bold text-brand-white">
+                <p className="text-2xl lg:text-3xl font-bold text-brand-white">
                   {formatPrice(product.price)}
                 </p>
               )}
@@ -432,23 +452,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Flavor Navigation Indicators */}
-      {product.flavors && product.flavors.length > 0 && (
-        <div className="fixed bottom-28 left-1/2 -translate-x-1/2 flex gap-2">
-          {product.flavors.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentFlavorIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentFlavorIndex
-                  ? "bg-brand-white"
-                  : "bg-brand-white/30 md:hover:bg-brand-white/60 active:bg-brand-white/50"
-              }`}
-              aria-label={`Go to flavor ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
 
       {/* Comparison Modal */}
       {showComparisonModal && currentFlavor?.compareTitle && (

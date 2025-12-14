@@ -39,7 +39,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-brand-blue sticky top-0 z-50 backdrop-blur-xl">
+    <header className="bg-brand-blue sticky top-0 z-[100] backdrop-blur-xl border-b border-brand-white/5">
       <div className="w-full">
         <div className="relative flex h-20 items-center justify-between lg:justify-start px-3 md:px-6 lg:px-8">
           {/* Logo */}

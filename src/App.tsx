@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -25,6 +25,10 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   useScrollMemory();
+  const location = useLocation();
+
+  // Hide footer on product detail pages
+  const isProductPage = location.pathname.startsWith('/products/');
 
   return (
     <>
@@ -44,7 +48,7 @@ const AppContent = () => {
             <Route path="/account" element={<Account />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-      <Footer />
+      {!isProductPage && <Footer />}
     </>
   );
 };

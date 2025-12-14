@@ -40,19 +40,19 @@ export const Header = () => {
 
   return (
     <header className="bg-brand-blue sticky top-0 z-50 backdrop-blur-xl">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="relative flex h-20 items-center justify-between lg:justify-start">
+      <div className="w-full">
+        <div className="relative flex h-20 items-center justify-between lg:justify-start px-3 md:px-6 lg:px-8">
           {/* Logo */}
           <Link to="/" className={`flex items-center justify-start z-10 ${iconButtonHoverClass}`}>
             <img
               src={childlikeLogo}
               alt="Childlike"
-              className="h-[52px] w-auto drop-shadow-[0_0_8px_rgba(255,255,255,0.15)]"
+              className="h-12 md:h-[52px] w-auto drop-shadow-[0_0_8px_rgba(255,255,255,0.15)]"
             />
           </Link>
 
           {/* Desktop Navigation - Bold Bricolage Grotesque */}
-          <nav className="hidden lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:flex items-center justify-center gap-6">
+          <nav className="hidden lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:flex items-center justify-center gap-6">
             {siteConfig.primaryNav.map((item) => (
               <Link
                 key={item.path}
@@ -121,16 +121,27 @@ export const Header = () => {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <nav className="lg:hidden border-t border-brand-white/10 py-4 space-y-2">
-            {siteConfig.primaryNav.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block text-lg px-6 py-2 ${getNavItemClassLocal(item.path)}`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {siteConfig.primaryNav.map((item) => {
+              const isActive = isNavItemActive(item.path);
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-6 py-2"
+                >
+                  <span
+                    className={`inline-block font-black text-brand-white text-lg transition-all duration-300 border-b-4 ${
+                      isActive
+                        ? "border-brand-white scale-110"
+                        : "border-transparent hover:scale-125"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </Link>
+              );
+            })}
 
             {/* Mobile user actions */}
             <div className="flex gap-2 pt-4">

@@ -224,13 +224,13 @@ const ProductDetail = () => {
   return (
     <div className="bg-brand-blue h-screen flex flex-col overflow-hidden">
       {/* Back button - Icon only */}
-      <div className="container mx-auto px-4 py-0">
+      <div className="container mx-auto px-4 py-4 relative z-10">
         <Link
           to="/"
-          className={`inline-flex items-center justify-center w-8 h-8 text-brand-white/70 hover:text-brand-white ${iconButtonHoverClass}`}
+          className={`inline-flex items-center justify-center w-10 h-10 md:w-8 md:h-8 text-brand-white/70 hover:text-brand-white ${iconButtonHoverClass}`}
           title="Back to home"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </Link>

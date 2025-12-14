@@ -19,8 +19,8 @@ export const BrandButton = ({
   const baseStyles = "inline-flex items-center justify-center px-8 py-3 text-sm font-semibold transition-all rounded-md";
   
   const variantStyles = {
-    primary: "bg-brand-blue text-brand-white hover:opacity-90",
-    outline: "bg-transparent text-foreground border-2 border-brand-black hover:bg-brand-black hover:text-brand-white",
+    primary: "bg-brand-blue text-brand-white md:hover:opacity-90 active:opacity-80",
+    outline: "bg-transparent text-foreground border-2 border-brand-black md:hover:bg-brand-black md:hover:text-brand-white active:opacity-80",
   };
 
   const styles = `${baseStyles} ${variantStyles[variant]} ${className}`;

@@ -34,7 +34,7 @@ export const Header = () => {
     const baseClass = `font-black text-brand-white transition-all duration-300 border-b-4`;
     const activeClass = isActive
       ? `scale-110 border-brand-white`
-      : `border-transparent hover:scale-125 hover:opacity-100`;
+      : `border-transparent md:hover:scale-125 md:hover:opacity-100 active:scale-[1.03] active:opacity-90`;
     return `${baseClass} ${activeClass}`;
   };
 
@@ -69,14 +69,14 @@ export const Header = () => {
             <div className="hidden lg:flex items-center gap-3">
               <button
                 onClick={() => navigate("/contact")}
-                className={`w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 ${iconButtonHoverClass}`}
+                className={`w-10 h-10 rounded-full bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 md:hover:border-brand-white/30 active:opacity-80 transition-all duration-300 ${iconButtonHoverClass}`}
                 aria-label="Go to contact"
               >
                 <Phone className="w-5 h-5 text-brand-white" />
               </button>
               <button
                 onClick={() => navigate(user ? "/account" : "/auth/login")}
-                className={`w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 ${iconButtonHoverClass}`}
+                className={`w-10 h-10 rounded-full bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 md:hover:border-brand-white/30 active:opacity-80 transition-all duration-300 ${iconButtonHoverClass}`}
                 aria-label={user ? "Go to account" : "Sign in"}
               >
                 {user && user.id ? (
@@ -87,7 +87,7 @@ export const Header = () => {
               </button>
               <button
                 onClick={() => navigate("/cart")}
-                className={`w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 hover:border-brand-white/30 relative ${iconButtonHoverClass}`}
+                className={`w-10 h-10 rounded-full bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/10 md:hover:border-brand-white/30 active:opacity-80 transition-all duration-300 relative ${iconButtonHoverClass}`}
                 aria-label="Go to cart"
               >
                 <ShoppingBag className="w-5 h-5 text-brand-white" />
@@ -100,7 +100,7 @@ export const Header = () => {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-brand-white/10 transition-colors"
+              className="lg:hidden p-2 rounded-lg md:hover:bg-brand-white/10 active:opacity-80 transition-all duration-300"
               aria-label="Toggle menu"
             >
               <div className="w-6 h-5 flex flex-col justify-center gap-[7px] relative">
@@ -134,7 +134,7 @@ export const Header = () => {
                     className={`inline-block font-black text-brand-white text-lg transition-all duration-300 border-b-4 ${
                       isActive
                         ? "border-brand-white scale-110"
-                        : "border-transparent hover:scale-125"
+                        : "border-transparent md:hover:scale-125 active:scale-[1.03] active:opacity-90"
                     }`}
                   >
                     {item.label}
@@ -150,7 +150,7 @@ export const Header = () => {
                   navigate(user ? "/account" : "/auth/login");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-2"
               >
                 {user && user.id ? (
                   <>
@@ -169,7 +169,7 @@ export const Header = () => {
                   navigate("/contact");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-2"
                 aria-label="Go to contact"
               >
                 <Phone className="w-4 h-4" />
@@ -180,7 +180,7 @@ export const Header = () => {
                   navigate("/cart");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 flex items-center justify-center gap-2 relative"
+                className="flex-1 px-6 py-3 rounded-full text-sm font-medium text-brand-white bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm border border-brand-white/10 active:opacity-80 transition-all duration-300 flex items-center justify-center gap-2 relative"
                 aria-label="Go to cart"
               >
                 <ShoppingBag className="w-4 h-4" />

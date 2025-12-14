@@ -35,8 +35,8 @@ export const SocialMediaIcons = ({ variant = "footer" }: SocialMediaIconsProps) 
 
   const iconClass = isFooter ? "w-5 h-5" : "w-5 h-5";
   const buttonClass = isFooter
-    ? "text-foreground/60 hover:text-foreground transition-colors"
-    : "group w-10 h-10 rounded-full bg-brand-white/10 hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/20 hover:border-brand-white/40 transition-all duration-300 hover:scale-110";
+    ? "text-foreground/60 md:hover:text-foreground active:opacity-80 transition-all duration-300"
+    : "group w-10 h-10 rounded-full bg-brand-white/10 md:hover:bg-brand-white/20 backdrop-blur-sm flex items-center justify-center border border-brand-white/20 md:hover:border-brand-white/40 active:opacity-80 transition-all duration-300 md:hover:scale-110";
 
   return (
     <div className={isFooter ? "flex items-center gap-4 ml-4 pl-4 border-l border-brand-black/10" : "flex gap-2"}>
@@ -47,7 +47,7 @@ export const SocialMediaIcons = ({ variant = "footer" }: SocialMediaIconsProps) 
         className={buttonClass}
         aria-label="Follow us on Instagram"
       >
-        <InstagramIcon className={`${iconClass} ${isFooter ? "" : "text-brand-white group-hover:scale-110 transition-transform"}`} />
+        <InstagramIcon className={`${iconClass} ${isFooter ? "" : "text-brand-white md:group-hover:scale-110 group-active:scale-[1.03] transition-transform"}`} />
       </a>
       <a
         href={socialLinks.tiktok}
@@ -56,7 +56,7 @@ export const SocialMediaIcons = ({ variant = "footer" }: SocialMediaIconsProps) 
         className={buttonClass}
         aria-label="Follow us on TikTok"
       >
-        <TikTokIcon className={`${iconClass} ${isFooter ? "" : "text-brand-white group-hover:scale-110 transition-transform"}`} />
+        <TikTokIcon className={`${iconClass} ${isFooter ? "" : "text-brand-white md:group-hover:scale-110 group-active:scale-[1.03] transition-transform"}`} />
       </a>
     </div>
   );

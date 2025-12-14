@@ -9,18 +9,21 @@
 
 /**
  * Standard hover effect for interactive elements
- * Scale up 25% with smooth transition
+ * Scale up 25% with smooth transition on desktop only
+ * Mobile: Uses active state for tap feedback
  * Used for: nav items, icons, buttons, back button, links
  */
 export const interactiveHoverEffect = `
   transition-all duration-300
-  hover:scale-125
+  md:hover:scale-125
+  active:scale-[1.03] active:opacity-90
 `;
 
 /**
  * Navigation item class (used in Header)
  * Active state: scale 110% with white underline
- * Inactive state: transparent border, interactive hover
+ * Inactive state: transparent border, desktop hover only
+ * Mobile: active tap feedback instead of hover
  */
 export const getNavItemClass = (isActive: boolean): string => {
   const baseClass = `
@@ -31,47 +34,55 @@ export const getNavItemClass = (isActive: boolean): string => {
 
   const activeClass = isActive
     ? `scale-110 border-brand-white`
-    : `border-transparent hover:scale-125 hover:opacity-100`;
+    : `border-transparent md:hover:scale-125 md:hover:opacity-100 active:scale-[1.03] active:opacity-90`;
 
   return `${baseClass} ${activeClass}`;
 };
 
 /**
  * Icon button class (Account, Cart, Back button)
- * Includes: scale up, smooth animation
+ * Desktop: Scale up 25% on hover
+ * Mobile: Tap feedback with active state
  * Used for: User icon, Shopping bag icon, Back button
  */
 export const iconButtonHoverClass = `
   transition-all duration-300
-  hover:scale-125
+  md:hover:scale-125
+  active:scale-[1.03] active:opacity-90
 `;
 
 /**
  * Standard button class
- * Smooth scale and color transition
+ * Desktop: Smooth scale and color transition
+ * Mobile: Active tap feedback instead of hover
  */
 export const buttonHoverClass = `
   transition-all duration-300
-  hover:scale-105
-  hover:opacity-90
+  md:hover:scale-105
+  md:hover:opacity-90
+  active:scale-[1.03] active:opacity-90
 `;
 
 /**
  * Link hover effect
- * Subtle scale up
+ * Desktop: Subtle scale up
+ * Mobile: Active tap feedback instead of hover
  */
 export const linkHoverClass = `
   transition-all duration-300
-  hover:scale-105
+  md:hover:scale-105
+  active:scale-[1.03] active:opacity-90
 `;
 
 /**
  * Form input/interactive element hover
- * Brightness and scale
+ * Desktop: Brightness and scale
+ * Mobile: Active tap feedback instead of hover
  */
 export const formElementHoverClass = `
   transition-all duration-300
-  hover:brightness-110
+  md:hover:brightness-110
+  active:opacity-80
 `;
 
 /**

@@ -16,7 +16,7 @@ export const Footer = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="text-sm text-foreground/60 hover:text-foreground transition-colors"
+                className="text-sm text-foreground/60 md:hover:text-foreground active:opacity-80 transition-all duration-300"
               >
                 {item.label}
               </Link>

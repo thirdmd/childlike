@@ -7,9 +7,9 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <Link 
+    <Link
       to={`/products/${product.slug}`}
-      className="block border border-brand-black/10 rounded-lg p-6 hover:border-brand-blue transition-colors"
+      className="block border border-brand-black/10 rounded-lg p-6 md:hover:border-brand-blue active:border-brand-blue/50 active:opacity-90 transition-all duration-300"
     >
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-h3">{product.name}</h3>

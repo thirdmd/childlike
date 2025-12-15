@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Page } from "@/components/layout/Page";
 import { useCart } from "@/context/CartContext";
@@ -58,22 +59,36 @@ const Cart = () => {
   const navigate = useNavigate();
   const { state, updateQuantity, removeItem, subtotal, itemCount } = useCart();
   const { toast } = useToast();
+  const [deleteConfirm, setDeleteConfirm] = React.useState<{ productId: string; productName: string } | null>(null);
 
   // Handle delete with confirmation
   const handleDeleteItem = (productId: string, productName: string) => {
-    toast({
-      title: "Remove from cart?",
-      description: `Are you sure you want to remove "${productName}" from your cart?`,
-      action: (
-        <ToastAction
-          altText="Confirm delete"
-          onClick={() => removeItem(productId)}
-          className="bg-red-500 hover:bg-red-600 text-white"
-        >
-          Remove
-        </ToastAction>
-      ),
-    });
+    // On mobile: show custom positioned confirmation
+    if (window.innerWidth < 768) {
+      setDeleteConfirm({ productId, productName });
+    } else {
+      // On desktop: use toast
+      toast({
+        title: "Remove from cart?",
+        description: `Are you sure you want to remove "${productName}" from your cart?`,
+        action: (
+          <ToastAction
+            altText="Confirm delete"
+            onClick={() => removeItem(productId)}
+            className="bg-red-500 hover:bg-red-600 text-white"
+          >
+            Remove
+          </ToastAction>
+        ),
+      });
+    }
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirm) {
+      removeItem(deleteConfirm.productId);
+      setDeleteConfirm(null);
+    }
   };
 
   // Handle checkout - redirect to Stripe Payment Link
@@ -156,8 +171,30 @@ const Cart = () => {
             {state.items.map((item) => (
               <div
                 key={item.productId}
-                className="bg-brand-white/10 backdrop-blur-sm border border-brand-white/20 rounded-2xl p-6 flex items-center gap-6"
+                className="bg-brand-white/10 backdrop-blur-sm border border-brand-white/20 rounded-2xl p-6 flex items-center gap-6 relative"
               >
+                {/* Mobile Delete Confirmation Overlay */}
+                {deleteConfirm?.productId === item.productId && (
+                  <div className="md:hidden absolute inset-0 bg-black/80 backdrop-blur-sm rounded-2xl z-10 flex flex-col items-center justify-center p-6 gap-4">
+                    <p className="text-brand-white font-semibold text-center">
+                      Remove "{deleteConfirm.productName}"?
+                    </p>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setDeleteConfirm(null)}
+                        className="px-6 py-2 rounded-full bg-brand-white/20 text-brand-white hover:bg-brand-white/30 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={confirmDelete}
+                        className="px-6 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                )}
                 {/* Product Image - Always show (real image or placeholder) */}
                 <img
                   src={getCartImage(item.productId)}

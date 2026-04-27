@@ -17,9 +17,8 @@ import { ToastAction } from "@/components/ui/toast";
  * Format: cartview_(product)_(flavor).png
  *
  * Examples:
- * - cartview_cookie_chocochip.png → Chewy Protein Cookie - Chocolate Chip
- * - cartview_cookie_peanutbutter.png → Chewy Protein Cookie - Peanut Butter
- * - cartview_cookie_pistachio.png → Chewy Protein Cookie - Pistachio Biskit
+ * - cartview_cookie_chocochip.png → Childlike Cookie - Curby
+ * - cartview_cookie_peanutbutter.png → Childlike Cookie - Charlie
  *
  * IMAGE STRATEGY:
  * - Flavors WITH uploaded images → Show flavor-specific image
@@ -28,10 +27,8 @@ import { ToastAction } from "@/components/ui/toast";
  */
 
 // Import flavor-specific cart images following naming convention
-import cartview_cookie_chocochip from "@/assets/cartview_cookie_chocochip.png";
-// Future imports (add as images become available):
-// import cartview_cookie_peanutbutter from "@/assets/cartview_cookie_peanutbutter.png";
-// import cartview_cookie_pistachio from "@/assets/cartview_cookie_pistachio.png";
+import cartview_curby from "@/assets/cartview_curby.png";
+import cartview_charlie from "@/assets/cartview_charlie.png";
 
 /**
  * Centralized mapping: productId (product-slug-flavor-slug) → cart image
@@ -39,10 +36,8 @@ import cartview_cookie_chocochip from "@/assets/cartview_cookie_chocochip.png";
  * ONLY mapped flavors will show images - others show nothing
  */
 const cartFlavorImages: Record<string, string> = {
-  "chewy-protein-cookie-chocolate-chip": cartview_cookie_chocochip,
-  // Future mappings (uncomment when images are added):
-  // "chewy-protein-cookie-peanut-butter": cartview_cookie_peanutbutter,
-  // "chewy-protein-cookie-pistachio-biskit": cartview_cookie_pistachio,
+  "childlike-cookie-curby": cartview_curby,
+  "childlike-cookie-charlie": cartview_charlie,
 };
 
 /**
@@ -132,7 +127,7 @@ const Cart = () => {
               Add some products to your cart to get started.
             </p>
             <button
-              onClick={() => navigate("/products/chewy-protein-cookie")}
+              onClick={() => navigate("/products/childlike-cookie")}
               className={ctaPrimaryButtonClassName}
             >
               Continue Shopping

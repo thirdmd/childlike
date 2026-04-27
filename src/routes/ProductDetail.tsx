@@ -23,9 +23,8 @@ import { ComparisonTable } from "@/components/ComparisonTable";
  * Format: productview_(product)_(flavor).png
  *
  * Examples:
- * - productview_cookie_chocochip.png → Chewy Protein Cookie - Chocolate Chip
- * - productview_cookie_peanutbutter.png → Chewy Protein Cookie - Peanut Butter
- * - productview_cookie_pistachio.png → Chewy Protein Cookie - Pistachio Biskit
+ * - productview_cookie_chocochip.png → Childlike Cookie - Curby
+ * - productview_cookie_peanutbutter.png → Childlike Cookie - Charlie
  *
  * IMAGE STRATEGY:
  * - Flavors WITH uploaded images → Show flavor-specific image
@@ -34,10 +33,8 @@ import { ComparisonTable } from "@/components/ComparisonTable";
  */
 
 // Import flavor-specific product images following naming convention
-import productview_cookie_chocochip from "@/assets/productview_cookie_chocochip.png";
-// Future imports (add as images become available):
-// import productview_cookie_peanutbutter from "@/assets/productview_cookie_peanutbutter.png";
-// import productview_cookie_pistachio from "@/assets/productview_cookie_pistachio.png";
+import productview_curby from "@/assets/productview_curby.png";
+import productview_charlie from "@/assets/productview_charlie.png";
 
 /**
  * Centralized mapping: product-slug + flavor-slug → image
@@ -45,10 +42,8 @@ import productview_cookie_chocochip from "@/assets/productview_cookie_chocochip.
  * ONLY mapped flavors will show images - others show nothing
  */
 const productFlavorImages: Record<string, string> = {
-  "chewy-protein-cookie-chocolate-chip": productview_cookie_chocochip,
-  // Future mappings (uncomment when images are added):
-  // "chewy-protein-cookie-peanut-butter": productview_cookie_peanutbutter,
-  // "chewy-protein-cookie-pistachio-biskit": productview_cookie_pistachio,
+  "childlike-cookie-curby": productview_curby,
+  "childlike-cookie-charlie": productview_charlie,
 };
 
 /**
@@ -225,7 +220,7 @@ const ProductDetail = () => {
   return (
     <div className="bg-brand-blue min-h-screen md:h-screen flex flex-col overflow-y-auto">
       {/* Back button - Icon only */}
-      <div className="px-2 lg:px-4 py-2 lg:py-4 relative z-10 flex">
+      <div className="px-0.5 lg:px-1 py-2 lg:py-4 relative z-10 flex">
         <Link
           to="/"
           className={`inline-flex items-center justify-center w-10 h-10 md:w-8 md:h-8 text-brand-white/70 md:hover:text-brand-white active:opacity-80 transition-all duration-300 ${iconButtonHoverClass}`}
@@ -244,11 +239,15 @@ const ProductDetail = () => {
           {/* Left: Product Name & Details */}
           <div className="lg:col-span-3 space-y-4">
             <div>
-              <h1 className="text-[clamp(1.5rem,6vw,2.5rem)] lg:text-5xl font-bold text-brand-white leading-tight whitespace-nowrap lg:whitespace-normal">
+              <h1 className="text-[clamp(1.6rem,5vw,2rem)] lg:text-4xl font-bold text-brand-white leading-tight whitespace-nowrap lg:whitespace-normal">
                 {product.name}
               </h1>
               {currentFlavor && (
-                <p className="text-brand-white/60 text-base lg:text-lg font-light mt-2 tracking-wide">
+                <p className={`text-2xl lg:text-3xl font-semibold mt-2 tracking-wide inline-block border-b-2 pb-1 ${
+                  currentFlavor.slug === 'curby' ? 'border-pink-500 text-pink-300' :
+                  currentFlavor.slug === 'charlie' ? 'border-orange-500 text-orange-300' :
+                  'border-brand-white/30 text-brand-white/80'
+                }`}>
                   {currentFlavor.name}
                 </p>
               )}
@@ -270,7 +269,7 @@ const ProductDetail = () => {
               )}
 
               {/* Product Image Container */}
-              <div className="relative w-full max-w-md aspect-square">
+              <div className="relative w-full max-w-sm lg:max-w-md aspect-square">
                 {/* Glow effect */}
                 <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
 
@@ -280,7 +279,7 @@ const ProductDetail = () => {
                     <img
                       src={productImageSrc}
                       alt={currentFlavor ? `${product.name} - ${currentFlavor.name}` : product.name}
-                      className="w-[85%] h-[85%] object-contain drop-shadow-2xl animate-float"
+                      className="w-[70%] h-[70%] object-contain drop-shadow-2xl animate-float"
                     />
                   ) : (
                     <div className="text-center">
@@ -306,7 +305,7 @@ const ProductDetail = () => {
 
             {/* Flavor Navigation Indicators - Below Product Image */}
             {product.flavors && product.flavors.length > 0 && (
-              <div className="flex gap-2 -mt-8 md:-mt-12 lg:-mt-16">
+              <div className="flex gap-2 -mt-6 md:-mt-10 lg:-mt-14">
                 {product.flavors.map((_, index) => (
                   <button
                     key={index}

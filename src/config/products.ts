@@ -50,18 +50,18 @@ export interface Product {
 
 export const productsConfig: Product[] = [
   {
-    id: "chewy-protein-cookie",
-    slug: "chewy-protein-cookie",
-    name: "Chewy Protein Cookie",
+    id: "childlike-cookie",
+    slug: "childlike-cookie",
+    name: "Childlike Cookie",
     tagline: "Engineered indulgence",
     description: "A protein cookie designed with precision. High protein, low sugar, real ingredients. Soft texture, honest flavor. No compromise between nutrition and taste.",
     status: "coming_soon",
-    price: 120,
+    price: 140,
     flavors: [
       {
-        id: "chocolate-chip",
-        name: "Chocolate Chip",
-        slug: "chocolate-chip",
+        id: "curby",
+        name: "Curby",
+        slug: "curby",
         description: "Stop overthinking. It's a f*cking chewy chocolate-chip cookie… you know exactly what that is. Except this one is packing hard like a BBC (Buff Bake Cookie). High in protein, low in sugar, no compromise between taste and nutrition.",
         compareTitle: "Childlike vs Chipsahoy",
         comparison: {
@@ -101,29 +101,11 @@ export const productsConfig: Product[] = [
         },
       },
       {
-        id: "peanut-butter",
-        name: "Peanut Butter",
-        slug: "peanut-butter",
-        price: 125,
+        id: "charlie",
+        name: "Charlie",
+        slug: "charlie",
+        price: 140,
         description: "Rich, creamy peanut butter flavor in a soft, chewy cookie. High protein, low sugar, real peanut butter. Classic taste, engineered nutrition.",
-        compareTitle: "Childlike vs Chipsahoy",
-        macros: {
-          calories: 0,
-          protein: 0,
-          sugar: 0,
-        },
-        reviews: {
-          totalCount: 0,
-          averageRating: 0,
-          distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-        },
-      },
-      {
-        id: "pistachio-biskit",
-        name: "Pistachio Biskit",
-        slug: "pistachio-biskit",
-        price: 130,
-        description: "Unique pistachio flavor with a soft, biskit-style texture. High protein, low sugar, real pistachios. Sophisticated taste, premium ingredients.",
         compareTitle: "Childlike vs Chipsahoy",
         macros: {
           calories: 0,

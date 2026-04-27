@@ -13,7 +13,7 @@ interface CheckoutConfigItem {
 
 export const checkoutConfig: CheckoutConfigItem[] = [
   {
-    productId: "chewy-protein-cookie", // MUST match the productId used in CartItem
+    productId: "childlike-cookie", // MUST match the productId used in CartItem
     stripePaymentLinkUrl: "https://buy.stripe.com/XXXXXX" // placeholder for now
   }
   // Add more products here in the future if needed

@@ -37,18 +37,27 @@ const Home = () => {
 
         {/* Product - Centered in safe zone (between header ~80px and mouse ~60px) */}
         <div className="absolute inset-0 -top-16 bottom-16 md:static flex items-center justify-center">
-          <Link to="/products/chewy-protein-cookie" className="relative z-10 w-full max-w-2xl px-8">
+          <Link to="/products/childlike-cookie" className="relative z-10 w-full max-w-xl px-8 lg:px-4">
             <div className="relative aspect-square animate-float">
               {/* Glow effect behind product */}
               <div className="absolute inset-0 bg-brand-white/5 rounded-full blur-3xl scale-110" />
+              {/* Tap indicator — mobile only */}
+              <div className="md:hidden absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 animate-pulse">
+                <span className="text-brand-white/50 text-xs tracking-[0.2em] uppercase">Shop Now</span>
+                <svg className="w-3 h-3 text-brand-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
 
               {/* Product image */}
               <div className="relative w-full h-full flex items-center justify-center group">
-                <img
-                  src={productImage}
-                  alt="Childlike Protein Cookie"
-                  className="w-[85%] h-[85%] object-contain drop-shadow-2xl transition-transform duration-300 ease-in-out md:group-hover:scale-110 group-active:scale-[1.03]"
-                />
+                <div className="w-[75%] h-[75%] animate-breathe md:group-hover:[animation-play-state:paused]">
+                  <img
+                    src={productImage}
+                    alt="Childlike Protein Cookie"
+                    className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-300 ease-in-out md:group-hover:scale-110 group-active:scale-[1.03]"
+                  />
+                </div>
               </div>
             </div>
           </Link>

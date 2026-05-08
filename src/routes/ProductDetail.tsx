@@ -341,8 +341,8 @@ const ProductDetail = () => {
                 </div>
                 <div className="w-16 h-16 rounded-full bg-brand-white/10 backdrop-blur-sm flex items-center justify-center border border-brand-white/20">
                   <div className="text-center">
-                    <p className="text-brand-white font-bold text-sm">&lt;1g</p>
-                    <p className="text-brand-white/60 text-xs">sugars</p>
+                    <p className="text-brand-white font-bold text-sm">69g</p>
+                    <p className="text-brand-white/60 text-xs">net wt</p>
                   </div>
                 </div>
               </div>

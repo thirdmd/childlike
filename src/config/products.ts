@@ -56,13 +56,13 @@ export const productsConfig: Product[] = [
     tagline: "Engineered indulgence",
     description: "A protein cookie designed with precision. High protein, low sugar, real ingredients. Soft texture, honest flavor. No compromise between nutrition and taste.",
     status: "coming_soon",
-    price: 140,
+    price: 145,
     flavors: [
       {
         id: "curby",
         name: "Curby",
         slug: "curby",
-        description: "Stop overthinking. It's a f*cking chewy chocolate-chip cookie… you know exactly what that is. Except this one is packing hard like a BBC (Buff Bake Cookie). High in protein, low in sugar, no compromise between taste and nutrition.",
+        description: "Tastes like ripe fruit.",
         compareTitle: "Childlike vs Chipsahoy",
         comparison: {
           competitorName: "Chips Ahoy!",
@@ -74,8 +74,8 @@ export const productsConfig: Product[] = [
             },
             {
               attribute: "Weight",
-              childlike: "69g (ideal number) ✅",
-              competitor: "definetely NOT 69g 😡",
+              childlike: "69g ✅",
+              competitor: "Not 69g",
             },
             {
               attribute: "Age",
@@ -90,9 +90,9 @@ export const productsConfig: Product[] = [
           ],
         },
         macros: {
-          calories: 270,
-          protein: 22,
-          sugar: 5,
+          calories: 295,
+          protein: 23,
+          sugar: 0,
         },
         reviews: {
           totalCount: 0,
@@ -104,12 +104,37 @@ export const productsConfig: Product[] = [
         id: "charlie",
         name: "Charlie",
         slug: "charlie",
-        price: 140,
-        description: "Rich, creamy peanut butter flavor in a soft, chewy cookie. High protein, low sugar, real peanut butter. Classic taste, engineered nutrition.",
+        price: 145,
+        description: "Tastes and smells like nut.",
         compareTitle: "Childlike vs Chipsahoy",
+        comparison: {
+          competitorName: "Chips Ahoy!",
+          rows: [
+            {
+              attribute: "Color",
+              childlike: "better blue ✅",
+              competitor: "blue",
+            },
+            {
+              attribute: "Weight",
+              childlike: "69g ✅",
+              competitor: "Not 69g",
+            },
+            {
+              attribute: "Age",
+              childlike: "2026",
+              competitor: "1963 ✅",
+            },
+            {
+              attribute: "How you feel after",
+              childlike: "I want more, and water ✅",
+              competitor: "i want more water",
+            },
+          ],
+        },
         macros: {
-          calories: 0,
-          protein: 0,
+          calories: 290,
+          protein: 23,
           sugar: 0,
         },
         reviews: {
